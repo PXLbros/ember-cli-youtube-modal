@@ -84,7 +84,6 @@ export default Ember.Component.extend({
         }
     },
 
-
     /*
      * Functions / Methods
      */
@@ -202,10 +201,12 @@ export default Ember.Component.extend({
                 let videoId = this.get('videoId');
 
                 let Player = new YT.Player('player', {
-                    width: 1280,
-                    height: 720,
+                    width: this.get('width'),
+                    height: this.get('height'),
                     videoId: videoId,
-                    playerVars: { 'controls': 0 },
+                    playerVars: {
+                        'controls': this.get('controls')
+                    },
                     events: {
                         'onReady': onPlayerReady,
                         'onStateChange': onPlayerStateChange
@@ -225,7 +226,16 @@ export default Ember.Component.extend({
                 function onPlayerStateChange(event) {
                     if (event.data === YT.PlayerState.PLAYING) {
 
-                    } else if (event.data === YT.PlayerState.ENDED) {
+                    }
+
+                    else if (event.data === YT.PlayerState.PAUSED) {
+                        console.log('paused');
+
+                        self.get('$progressBar').stop();
+                        Ember.run.cancel(vidClock);
+                    }
+
+                    else if (event.data === YT.PlayerState.ENDED) {
                         // When the youtube video has ended, close the modal
                         self.closeModal();
                     }

@@ -20,19 +20,42 @@
     visibility: visible;
 }
 
-.progress-container {
+.modal-video-close {
     position: absolute;
-    left: 50%;
-    bottom: 10%;
-    transform: translate3d(-50%, 0, 0);
+    top: 50px;
+    right: 30px;
+}
 
+.yt-player {
+    width: 100%;
+    height: 100%;
+}
+
+.yt-controls {
+    position: absolute;
+    bottom: 0;
+    color: white;
+}
+
+.progress-container {
+    position: relative;
     width: 600px;
+    height: 100px;
+    background: white;
+}
 
-    background: #FFF;
+.progress-appearance {
+    width: 100%;
+    height: 100%;
+    background: red;
 }
 
 .progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
     width: 0;
-    height: 100px;
+    height: 100%;
     background: red;
 }

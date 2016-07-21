@@ -1,14 +1,27 @@
+{{!-- Modal close button --}}
 <button class="modal-video-close" {{action "closeModal"}}>close</button>
-{{!-- <iframe src={{videoUrl}} frameborder="0" type="text/html" class="modal-trailer-holder-iframe"></iframe> --}}
-<div id="player"></div>
 
-<button class="player-toggle" {{action "toggleVideo"}}>
-    <span class="player-toggle-play">Play</span>
-</button>
+{{!-- Video Target --}}
+<div id="player" class="yt-player"></div>
 
-<div class="progress-container">
-    <div class="progress"></div>
-</div>
+{{!-- #Video UI --}}
+<div class="yt-controls">
 
+    {{!-- Clock --}}
+    <div class="yt-duration">{{seconds-to-minutes this.time}} / {{seconds-to-minutes this.duration}}</div>
 
-<div class="video-duration">{{seconds-to-minutes this.time}} / {{seconds-to-minutes this.duration}}</div>
+    {{!-- Play/Pause button --}}
+    <button class="yt-toggle" {{action "toggleVideo"}}>
+        <span class="yt-toggle-icon {{unless isPlaying "is-paused"}}">Toggle</span>
+    </button>
+
+    {{!-- Progress Bar / Scrub --}}
+    <div class="progress-container">
+        {{!-- <div class="progress-appearance"></div> --}}
+        <div class="progress"></div>
+    </div>
+
+    {{!-- Fullscreen button --}}
+    {{!-- <button class="yt-fullscreen-toggle" {{action "toggleFullscreen"}}>Fullscreen</button> --}}
+
+</div>{{!-- #Video UI --}}
