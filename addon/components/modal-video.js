@@ -5,8 +5,8 @@ import layout from '../templates/components/modal-video';
 
 
  */
- var poll;
- var vidClock;
+var poll;
+var vidClock;
 
 export default Ember.Component.extend({
     layout,
@@ -16,13 +16,25 @@ export default Ember.Component.extend({
 
     Player: null,
 
+    /*
+     * Selectors
+     */
+    $progressContainer: null,
+    $progressBar: null,
+
+    /*
+     * State
+     */
     showVideoModal: false,
 
     isPlaying: true,
 
-    $progressBar: null,
-
     percent: null,
+
+    duration: null,
+    time: 0,
+
+    ticking: true,
 
     init() {
         this._super(...arguments);
@@ -38,10 +50,13 @@ export default Ember.Component.extend({
     },
 
     closeModal() {
+        var self = this;
+
         this.set('showVideoModal', false);
 
         this.get('Player').seekTo(0);
         this.get('Player').stopVideo();
+
     },
 
     toggleVideo() {
@@ -51,11 +66,19 @@ export default Ember.Component.extend({
 
             this.get('$progressBar').stop();
             Ember.run.cancel(vidClock);
+            // console.log('stop');
 
         } else {
             this.get('Player').playVideo();
             this.set('isPlaying', true);
         }
+    },
+
+    initializeSelectors: function() {
+        var $progressContainer = Ember.$('.progress-container');
+
+        this.set('$progressContainer', $progressContainer);
+
     },
 
     animateProgressBar: function(percent) {
@@ -72,22 +95,17 @@ export default Ember.Component.extend({
         var $progressBar = $('.progress');
         self.set('$progressBar', $progressBar);
 
-        var seeking = false;
-
         if (state === 1) {
 
-            var duration = self.get('Player').getDuration();
-
             function progresser() {
-                if ((state === 1) && (seeking === false)) {
-                    var time = self.get('Player').getCurrentTime();
-                    var percent = (time / duration) * 100;
+                if (state === 1) {
+                    self.set('time', self.get('Player').getCurrentTime());
 
-                    console.log(percent);
+                    self.set('percent', (self.get('time') / self.get('duration')) * 100);
 
-                    self.set('percent', percent);
+                    self.get('animateProgressBar').call(self, self.get('percent'));
 
-                    self.get('animateProgressBar').call(self, percent);
+                    // console.log(self.get('percent'));
                 }
 
                 poll();
@@ -102,8 +120,40 @@ export default Ember.Component.extend({
         }
     },
 
-    didInsertElement: function() {
+    dragging: function() {
 
+        var self = this;
+
+        var progressContainerWidth = self.get('$progressContainer').width();
+
+        self.get('$progressContainer').on('mousemove', function(event) {
+            // console.log(event.pageX - $(this).offset().left);
+        });
+
+        self.get('$progressContainer').on('mousedown', function(event) {
+
+            var xPos = ( (event.pageX - $(this).offset().left) / progressContainerWidth ) * 100;
+
+            self.get('Player').seekTo( xPos * (self.get('duration') / 100) );
+
+            self.get('$progressBar').stop();
+            Ember.run.cancel(vidClock);
+
+            self.get('$progressBar').animate({
+                'width': xPos + '%',
+            }, 0, 'linear');
+
+        });
+
+    },
+
+    didInsertElement: function() {
+        Ember.run.scheduleOnce('afterRender', this, function() {
+            // Initialize selectors
+            this.get('initializeSelectors').call(this);
+
+            this.get('dragging').call(this);
+        });
     },
 
     playVideo: function() {
@@ -115,6 +165,8 @@ export default Ember.Component.extend({
             if (this.get('Player') !== null && this.get('showVideoModal') === true) {
                 this.get('Player').playVideo();
                 this.set('isPlaying', true);
+
+                self.get('handleVideoState').call(self, event.data);
             }
 
             if (this.get('Player') === null) {
@@ -122,9 +174,7 @@ export default Ember.Component.extend({
                 // get the passed in video id
                 let videoId = this.get('videoId');
 
-                let self = this;
-
-                let player = new YT.Player('player', {
+                let Player = new YT.Player('player', {
                     width: 1280,
                     height: 720,
                     videoId: videoId,
@@ -135,13 +185,14 @@ export default Ember.Component.extend({
                     }
                 });
 
-                this.set('Player', player);
+                self.set('Player', Player);
 
                 function onPlayerReady(event) {
                     event.target.setVolume(100);
                     event.target.playVideo();
                     self.set('isPlaying', true);
 
+                    self.set('duration', Player.getDuration() - 1);
                 }
 
                 function onPlayerStateChange(event) {
@@ -154,6 +205,7 @@ export default Ember.Component.extend({
 
                     self.get('handleVideoState').call(self, event.data);
                 }
+
 
             } // end if this.get('player') === null
 
