@@ -16,11 +16,13 @@ export default Ember.Component.extend({
 
     Player: null,
 
+
     /*
      * Selectors
      */
     $progressContainer: null,
     $progressBar: null,
+
 
     /*
      * State
@@ -36,10 +38,19 @@ export default Ember.Component.extend({
 
     ticking: true,
 
+    isDragging: false,
+
+    /*
+     * Init
+     */
     init() {
         this._super(...arguments);
     },
 
+
+    /*
+     * Actions
+     */
     actions: {
         closeModal() {
             this.closeModal();
@@ -56,7 +67,6 @@ export default Ember.Component.extend({
 
         this.get('Player').seekTo(0);
         this.get('Player').stopVideo();
-
     },
 
     toggleVideo() {
@@ -74,6 +84,10 @@ export default Ember.Component.extend({
         }
     },
 
+
+    /*
+     * Functions / Methods
+     */
     initializeSelectors: function() {
         var $progressContainer = Ember.$('.progress-container');
 
@@ -126,13 +140,14 @@ export default Ember.Component.extend({
 
         var progressContainerWidth = self.get('$progressContainer').width();
 
-        self.get('$progressContainer').on('mousemove', function(event) {
-            // console.log(event.pageX - $(this).offset().left);
-        });
+        var xPos;
+
 
         self.get('$progressContainer').on('mousedown', function(event) {
 
-            var xPos = ( (event.pageX - $(this).offset().left) / progressContainerWidth ) * 100;
+            self.set('isDragging', true);
+
+            xPos = ( (event.pageX - $(this).offset().left) / progressContainerWidth ) * 100;
 
             self.get('Player').seekTo( xPos * (self.get('duration') / 100) );
 
@@ -145,15 +160,27 @@ export default Ember.Component.extend({
 
         });
 
-    },
+        self.get('$progressContainer').on('mousemove', function(event) {
 
-    didInsertElement: function() {
-        Ember.run.scheduleOnce('afterRender', this, function() {
-            // Initialize selectors
-            this.get('initializeSelectors').call(this);
+            if ( self.get('isDragging') ) {
+                xPos = ( (event.pageX - $(this).offset().left) / progressContainerWidth ) * 100;
 
-            this.get('dragging').call(this);
+                self.get('Player').seekTo( xPos * (self.get('duration') / 100) );
+
+                self.get('$progressBar').stop();
+                Ember.run.cancel(vidClock);
+
+                self.get('$progressBar').animate({
+                    'width': xPos + '%',
+                }, 0, 'linear');
+            }
+
         });
+
+        self.get('$progressContainer').on('mouseup', function(event) {
+            self.set('isDragging', false);
+        });
+
     },
 
     playVideo: function() {
@@ -214,6 +241,22 @@ export default Ember.Component.extend({
 
     }.observes('showVideoModal'),
 
+
+    /*
+     * didInsertElement
+     */
+    didInsertElement: function() {
+        Ember.run.scheduleOnce('afterRender', this, function() {
+            // Initialize selectors
+            this.get('initializeSelectors').call(this);
+
+            this.get('dragging').call(this);
+        });
+    },
+
+    /*
+     * willDestroyElement
+     */
     willDestroyElement: function() {
         this._super(...arguments);
     }
