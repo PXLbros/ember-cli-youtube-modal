@@ -1,7 +1,7 @@
 {
-  "name": "ember-cli-video-modal",
+  "name": "ember-cli-youtube-modal",
   "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "Play a custom youtube video in a fullscreen modal",
   "directories": {
     "doc": "doc",
     "test": "tests"
