@@ -1,1 +1,1 @@
-export { default, initialize } from 'ember-cli-video-modal/initializers/youtube-init';
+export { default, initialize } from 'ember-cli-youtube-modal/initializers/youtube-init';

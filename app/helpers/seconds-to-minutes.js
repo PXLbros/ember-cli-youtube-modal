@@ -1,1 +1,1 @@
-export { default, secondsToMinutes } from 'ember-cli-video-modal/helpers/seconds-to-minutes';
+export { default, secondsToMinutes } from 'ember-cli-youtube-modal/helpers/seconds-to-minutes';

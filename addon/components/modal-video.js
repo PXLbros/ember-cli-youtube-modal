@@ -1,10 +1,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/modal-video';
-/*
 
 
-
- */
 var poll;
 var vidClock;
 
@@ -45,6 +42,8 @@ export default Ember.Component.extend({
      */
     init() {
         this._super(...arguments);
+
+        // console.log(detectLeftButton);
     },
 
 
@@ -92,6 +91,15 @@ export default Ember.Component.extend({
 
         this.set('$progressContainer', $progressContainer);
 
+    },
+
+    detectLeftButton: function(evt) {
+        evt = evt || window.event;
+        if ("buttons" in evt) {
+            return evt.buttons == 1;
+        }
+        var button = evt.which || evt.button;
+        return button == 1;
     },
 
     animateProgressBar: function(percent) {
@@ -144,18 +152,20 @@ export default Ember.Component.extend({
 
         self.get('$progressContainer').on('mousedown', function(event) {
 
-            self.set('isDragging', true);
+            if (self.get('detectLeftButton')(event)) {
+                self.set('isDragging', true);
 
-            xPos = ( (event.pageX - $(this).offset().left) / progressContainerWidth ) * 100;
+                xPos = ( (event.pageX - $(this).offset().left) / progressContainerWidth ) * 100;
 
-            self.get('Player').seekTo( xPos * (self.get('duration') / 100) );
+                self.get('Player').seekTo( xPos * (self.get('duration') / 100) );
 
-            self.get('$progressBar').stop();
-            Ember.run.cancel(vidClock);
+                self.get('$progressBar').stop();
+                Ember.run.cancel(vidClock);
 
-            self.get('$progressBar').animate({
-                'width': xPos + '%',
-            }, 0, 'linear');
+                self.get('$progressBar').animate({
+                    'width': xPos + '%',
+                }, 0, 'linear');
+            }
 
         });
 

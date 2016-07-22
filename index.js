@@ -2,5 +2,5 @@
 'use strict';
 
 module.exports = {
-  name: 'ember-cli-video-modal'
+  name: 'ember-cli-youtube-modal'
 };
