@@ -94,12 +94,13 @@ export default Ember.Component.extend({
     },
 
     detectLeftButton: function(evt) {
-        evt = evt || window.event;
-        if ("buttons" in evt) {
-            return evt.buttons == 1;
+        if ('buttons' in event) {
+            return event.buttons === 1;
+        } else if ('which' in event) {
+            return event.which === 1;
+        } else {
+            return event.button === 1;
         }
-        var button = evt.which || evt.button;
-        return button == 1;
     },
 
     animateProgressBar: function(percent) {
@@ -152,7 +153,9 @@ export default Ember.Component.extend({
 
         self.get('$progressContainer').on('mousedown', function(event) {
 
-            if (self.get('detectLeftButton')(event)) {
+            console.log(self.get('detectLeftButton')(event));
+
+            // if (self.get('detectLeftButton')(event)) {
                 self.set('isDragging', true);
 
                 xPos = ( (event.pageX - $(this).offset().left) / progressContainerWidth ) * 100;
@@ -165,7 +168,7 @@ export default Ember.Component.extend({
                 self.get('$progressBar').animate({
                     'width': xPos + '%',
                 }, 0, 'linear');
-            }
+            // }
 
         });
 
