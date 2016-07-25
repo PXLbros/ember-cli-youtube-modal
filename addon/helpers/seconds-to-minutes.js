@@ -1,14 +1,14 @@
 import Ember from 'ember';
 
-export function secondsToMinutes(params/*, hash*/) {
+export function secondsToMinutes(params) {
 
-    var d = Number(params);
+    var digits = Number(params);
 
-    var h = Math.floor(d / 3600);
-    var m = Math.floor(d % 3600 / 60);
-    var s = Math.floor(d % 3600 % 60);
+    var hours = Math.floor(digits / 3600);
+    var minutes = Math.floor(digits % 3600 / 60);
+    var seconds = Math.floor(digits % 3600 % 60);
 
-    return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);
+    return ( (hours > 0 ? hours + ":" + (minutes < 10 ? "0" : "") : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds );
 
 }
 

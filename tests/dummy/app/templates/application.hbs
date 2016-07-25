@@ -1,10 +1,11 @@
 {{modal-video
     showVideoModal = showVideoModal
-    videoId = "WgkQU32XSFQ"
+    videoId = videoId
     width = "auto"
     height = "auto"
     controls = 0
 }}
 
 
-<button {{action "openModal"}}>Open</button>
+<button {{action "openModal" listOfVideos "gleason"}}>Open gleason</button>
+<button {{action "openModal" listOfVideos "mothersday"}}>Open mothersday</button>

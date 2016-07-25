@@ -20,7 +20,6 @@ export function initialize(application) {
 
     }));
 
-
     // Load application once promises are resolved
     return Ember.RSVP.Promise.all(promises).then(()=>{
         application.advanceReadiness();
@@ -29,6 +28,6 @@ export function initialize(application) {
 }
 
 export default {
-  name: 'youtube-init',
-  initialize
+    name: 'youtube-init',
+    initialize
 };
