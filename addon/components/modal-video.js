@@ -24,6 +24,8 @@ export default Ember.Component.extend({
 
     $progressBar: null,
 
+    $ytDuration: null,
+
 
     /*
      * State
@@ -78,21 +80,29 @@ export default Ember.Component.extend({
         self.get('Player').destroy();
         self.set('Player', null);
 
-
+        // Reset the progress bar
+        Ember.run.later(function() {
+            self.get('$progressBar').removeAttr('style');
+            self.set('time', 0);
+            self.set('duration', 0);
+        }, 500)
 
     },
 
     toggleVideo() {
-        if (this.get('isPlaying')) {
-            this.get('Player').pauseVideo();
-            this.set('isPlaying', false);
+        var self = this;
 
-            this.get('$progressBar').stop();
+        if (self.get('isPlaying')) {
+            self.get('Player').pauseVideo();
+            self.set('isPlaying', false);
+
+            self.get('$progressBar').stop();
             Ember.run.cancel(vidClock);
 
         } else {
-            this.get('Player').playVideo();
-            this.set('isPlaying', true);
+
+            self.get('Player').playVideo();
+            self.set('isPlaying', true);
         }
     },
 
@@ -105,10 +115,12 @@ export default Ember.Component.extend({
         var self = this;
 
         var $progressContainer = Ember.$('.progress-container');
-        var $progressBar = $('.progress');
+        var $progressBar = Ember.$('.progress');
+        var $ytDuration = Ember.$('.yt-duration');
 
         self.set('$progressContainer', $progressContainer);
         self.set('$progressBar', $progressBar);
+        self.set('$ytDuration', $ytDuration);
 
     },
 
@@ -221,27 +233,29 @@ export default Ember.Component.extend({
         self.set('isPlaying', true);
 
         self.set('duration', self.get('Player').getDuration() - 1);
+
+        Ember.$('.yt-overlay').delay(1000).fadeOut();
     },
 
     onPlayerStateChange: function(event) {
         var self = this;
 
         if (event.data === YT.PlayerState.PLAYING) {
-            // console.log('playing');
+            console.log('playing');
         }
 
         else if (event.data === YT.PlayerState.PAUSED) {
             self.get('$progressBar').stop();
             Ember.run.cancel(vidClock);
 
-            // console.log('paused');
+            console.log('paused');
         }
 
         else if (event.data === YT.PlayerState.ENDED) {
             // When the youtube video has ended, close the modal
             self.closeModal();
 
-            // console.log('ended');
+            console.log('ended');
         }
 
         self.get('handleVideoState').call(self, event.data);
@@ -258,17 +272,6 @@ export default Ember.Component.extend({
             // get the passed in video id
             let videoId = self.get('videoId');
             let Player;
-
-            // If the youtube player has already been initialized and
-            // if the modal is opened
-            // then play the video
-            if (self.get('Player') !== null && self.get('showVideoModal') === true) {
-
-                self.get('Player').playVideo();
-                self.set('isPlaying', true);
-
-                self.get('handleVideoState').call(self, event.data);
-            }
 
             // If the youtube player hasn't been initialized
             if (self.get('Player') === null && self.get('showVideoModal')) {
@@ -317,6 +320,8 @@ export default Ember.Component.extend({
      */
     willDestroyElement: function() {
         this._super(...arguments);
+
+        this.closeModal();
     }
 
 });

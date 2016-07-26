@@ -6,7 +6,10 @@ export default Ember.Controller.extend({
 
     listOfVideos: {
         "gleason": "WgkQU32XSFQ",
-        "mothersday": "2BPr217zLps"
+        "mothersday": "2BPr217zLps",
+        // "bleedforthis": "-3qznhhFA0g"
+        // "bleedforthis": "B9x9z8PdG7g"
+        "bleedforthis": "LiDO_sP00uk"
     },
 
     actions: {
