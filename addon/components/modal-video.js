@@ -85,6 +85,8 @@ export default Ember.Component.extend({
             self.get('$progressBar').removeAttr('style');
             self.set('time', 0);
             self.set('duration', 0);
+
+            Ember.$('.yt-overlay').removeAttr('style');
         }, 500)
 
     },
@@ -234,7 +236,7 @@ export default Ember.Component.extend({
 
         self.set('duration', self.get('Player').getDuration() - 1);
 
-        Ember.$('.yt-overlay').delay(1000).fadeOut();
+        Ember.$('.yt-overlay').delay(500).fadeOut();
     },
 
     onPlayerStateChange: function(event) {
