@@ -27,3 +27,4 @@ For more information on using ember-cli, visit [http://ember-cli.com/](http://em
 
 ## API
 
+# How To Use Youtube-Modal
