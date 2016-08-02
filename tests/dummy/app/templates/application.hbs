@@ -1,10 +1,25 @@
-{{modal-video
+{{#modal-video
     showVideoModal = showVideoModal
     videoId = videoId
     width = "auto"
     height = "auto"
     customControls = true
+    header = header
+    footer = footer
 }}
+
+{{/modal-video}}
+
+
+{{!-- {{#modal-close as |section|}}
+  {{#if section.isHeader}}
+    My header
+  {{else if section.isBody}}
+    My body
+  {{else if section.isFooter}}
+    My footer
+  {{/if}}
+{{/modal-close}} --}}
 
 
 <button {{action "openModal" listOfVideos "gleason"}}>Open gleason</button>

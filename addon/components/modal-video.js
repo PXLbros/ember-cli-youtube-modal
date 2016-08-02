@@ -16,7 +16,6 @@ export default Ember.Component.extend({
 
     videoId: null,
 
-
     /*
      * Selectors
      */

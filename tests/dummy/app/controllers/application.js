@@ -16,6 +16,6 @@ export default Ember.Controller.extend({
             this.set('showVideoModal', true);
             this.set('videoId', listOfVideos[videoId]);
         }
-    },
+    }
 
 });

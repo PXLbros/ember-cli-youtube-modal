@@ -1,5 +1,6 @@
-{{!-- Modal close button --}}
-<button class="modal-video-close" {{action "closeModal"}}>close</button>
+<button class="modal-video-close" {{action "closeModal"}}>
+    Close
+</button>
 
 {{!-- Video Overlay --}}
 <div class="yt-overlay"></div>
@@ -16,7 +17,9 @@
 
     {{!-- Play/Pause button --}}
     <button class="yt-toggle" {{action "toggleVideo"}}>
-        <span class="yt-toggle-icon {{unless isPlaying "is-paused"}}">Toggle</span>
+        <span class="yt-toggle-icon {{unless isPlaying "is-paused"}}">
+            Toggle
+        </span>
     </button>
 
     {{!-- Progress Bar / Scrub --}}
