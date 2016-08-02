@@ -26,7 +26,7 @@ export default Ember.Component.extend({
     $ytDuration: null,
 
     /*
-     *
+     * No idea
      */
      xPos: 0,
 
@@ -250,12 +250,14 @@ export default Ember.Component.extend({
         var self = this;
 
         if (event.data === YT.PlayerState.PLAYING) {
-
+            self.set('isPlaying', true);
         }
 
         else if (event.data === YT.PlayerState.PAUSED) {
             self.get('$progressBar').stop();
             Ember.run.cancel(vidClock);
+
+            self.set('isPlaying', false);
         }
 
         else if (event.data === YT.PlayerState.ENDED) {
@@ -309,11 +311,17 @@ export default Ember.Component.extend({
      */
     didInsertElement: function() {
         Ember.run.scheduleOnce('afterRender', this, function() {
+
+            var self = this;
+
             // Initialize selectors
             this.get('initializeSelectors').call(this);
 
             // Initialize progress bar scrubbing
             this.get('dragging').call(this);
+
+            // Play Video if showVideoModal is set to true
+            self.get('playVideo').call(self);
 
         });
     },

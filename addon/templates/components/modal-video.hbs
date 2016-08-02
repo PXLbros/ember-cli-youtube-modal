@@ -1,5 +1,5 @@
 <button class="modal-video-close" {{action "closeModal"}}>
-    Close
+    {{{close-icon this.closeIcon}}}
 </button>
 
 {{!-- Video Overlay --}}
@@ -13,18 +13,21 @@
 <div class="yt-controls">
 
     {{!-- Clock --}}
-    <div class="yt-duration">{{seconds-to-minutes this.time}} / {{seconds-to-minutes this.duration}}</div>
+    <div class="yt-duration">{{seconds-to-minutes this.time}} <span class="yt-duration-divider">{{duration-divider this.durationDivider}}</span> {{seconds-to-minutes this.duration}}</div>
 
     {{!-- Play/Pause button --}}
     <button class="yt-toggle" {{action "toggleVideo"}}>
-        <span class="yt-toggle-icon {{unless isPlaying "is-paused"}}">
-            Toggle
-        </span>
+        {{!-- Icon --}}
+        <div class="yt-toggle-icon-holder {{unless isPlaying "is-paused"}}">
+            {{!-- Play / Play/Pause --}}
+            <div class="yt-toggle-icon mod-play">{{{play-icon this.playIcon}}}</div>
+            {{!-- Pause --}}
+            {{{pause-icon this.pauseIcon}}}
+        </div>
     </button>
 
     {{!-- Progress Bar / Scrub --}}
     <div class="progress-container">
-        {{!-- <div class="progress-appearance"></div> --}}
         <div class="progress"></div>
     </div>
 

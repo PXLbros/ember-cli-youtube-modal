@@ -3,7 +3,6 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
 
     showVideoModal: false,
-    videoId: null,
 
     listOfVideos: {
         "gleason": "WgkQU32XSFQ",
@@ -16,6 +15,12 @@ export default Ember.Controller.extend({
             this.set('showVideoModal', true);
             this.set('videoId', listOfVideos[videoId]);
         }
+    },
+
+    init() {
+        this._super(...arguments);
+
+        this.set('showVideoModal', true);
     }
 
 });

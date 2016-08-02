@@ -12,6 +12,17 @@
     pointer-events: hidden;
     visibility: hidden;
 
+    font-family: Helvetica, Arial, sans-serif;
+
+}
+
+.modal-video button {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    background: none;
+    outline: none;
+    color: #FFF;
 }
 
 .modal-video.is-open {
@@ -22,8 +33,20 @@
 
 .modal-video-close {
     position: absolute;
-    top: 50px;
-    right: 30px;
+    top: 80px;
+    right: 20px;
+
+
+
+}
+
+.modal-video-close:hover {
+    cursor: pointer;
+}
+
+.modal-video-close svg {
+    width: 30px;
+    height: 30px;
 }
 
 .yt-overlay {
@@ -48,6 +71,68 @@
     width: 100%;
 }
 
+.yt-toggle {
+    margin-left: 100px;
+}
+
+.yt-toggle-icon-default {
+    height: 50px;
+    width: 50px;
+    display: block;
+    overflow: hidden;
+    position: relative;
+}
+
+.left {
+    height: 100%;
+    float: left;
+    background-color: white;
+    width: 36%;
+    transition: all 0.25s ease;
+    overflow: hidden;
+}
+.triangle-1 {
+    transform: translate(0, -100%);
+}
+.triangle-2 {
+    transform: translate(0, 100%);
+}
+.triangle-1,
+.triangle-2 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: transparent;
+    width: 0;
+    height: 0;
+    border-right: 50px solid #000;
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    transition: transform 0.25s ease;
+}
+
+.right {
+    height: 100%;
+    float: right;
+    width: 36%;
+    background-color: white;
+    transition: all 0.25s ease;
+}
+
+.is-paused .left {
+    width: 50%;
+}
+.is-paused .right {
+    width: 50%;
+}
+.is-paused .triangle-1 {
+    transform: translate(0, -50%);
+}
+.is-paused .triangle-2 {
+    transform: translate(0, 50%);
+}
+
+
 .progress-container {
     position: relative;
     width: 100%;
@@ -68,5 +153,28 @@
     bottom: 0;
     width: 0;
     height: 100%;
-    background: red;
+    background: gray;
 }
+
+.yt-toggle-icon-holder {
+    position: relative;
+}
+
+.yt-toggle-icon {
+    position: absolute;
+    bottom: 10px;
+}
+
+.yt-toggle-icon.mod-pause {
+    opacity: 0;
+}
+
+.is-paused .yt-toggle-icon.mod-pause {
+    opacity: 1;
+}
+
+.is-paused .yt-toggle-icon.mod-play {
+    opacity: 0;
+}
+
+

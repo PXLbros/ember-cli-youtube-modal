@@ -1,28 +1,19 @@
-{{#modal-video
+{{modal-video
     showVideoModal = showVideoModal
     videoId = videoId
+
     width = "auto"
     height = "auto"
     customControls = true
-    header = header
-    footer = footer
+
+    closeIcon = '<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31.06 31.06"><line x1="0.53" y1="0.53" x2="30.53" y2="30.53" style="fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:1.5px"/><line x1="0.53" y1="30.53" x2="30.53" y2="0.53" style="fill:none;stroke:#fff;stroke-miterlimit:10;stroke-width:1.5px"/></svg>'
+    durationDivider = '/'
+    playIcon = 'Play'
+    pauseIcon = 'Pause'
 }}
 
-{{/modal-video}}
-
-
-{{!-- {{#modal-close as |section|}}
-  {{#if section.isHeader}}
-    My header
-  {{else if section.isBody}}
-    My body
-  {{else if section.isFooter}}
-    My footer
-  {{/if}}
-{{/modal-close}} --}}
 
 
 <button {{action "openModal" listOfVideos "gleason"}}>Open gleason</button>
 <button {{action "openModal" listOfVideos "mothersday"}}>Open mothersday</button>
-
 <button {{action "openModal" listOfVideos "bleedforthis"}}>Open bleedforthis</button>
