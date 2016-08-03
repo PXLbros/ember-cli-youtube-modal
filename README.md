@@ -54,14 +54,14 @@ But before you can use the addon, you must do some initial setup work In your co
 
 First you define a `showVideoModal` property and set it to be `false`.
 
-```
+```js
 // application.js
 showVideoModal: false
 ```
 
-Then pass the property down to your `{{modal-video}}` component.
+Then pass the property down to your `{{modal-video}}` component. I recommend you place your YouTube video modal component at the application root aka `application.hbs`.
 
-```
+```hbs
 // application.hbs
 {{modal-video
     showVideoModal = showVideoModal
@@ -70,18 +70,18 @@ Then pass the property down to your `{{modal-video}}` component.
 
 Next you define a `videoId` property whose value is the id of your YouTube video.
 
-```
+```js
 // application.js
 videoId: <Your YouTube Video ID>
 ```
 
 Then likewise pass the property down to your `{{modal-video}}` component.
 
-```
+```hbs
 // application.hbs
 {{modal-video
     showVideoModal = showVideoModal  
-    ***videoId=videoId***
+    **videoId=videoId**
 }}
 ```
 
@@ -91,7 +91,7 @@ That's it for the initial setup.
 
 To open and play after the page loads set `showVideoModal` to `true` in the `init()` function.
 
-```
+```js
 // application.js
 init() {
     this._super(...arguments);
@@ -100,9 +100,9 @@ init() {
 }
 ```
 
-If you want to click to open the YouTube modal, you can set `showVideoModal` to `true` as an action
+If you want to click an element to open the YouTube modal, you can do this by setting `showVideoModal` to `true` in an action:
 
-```
+```js
 actions: {
     openYouTubeModal() {
         // Make sure the `showVideoModal` property is accessible to your action!
@@ -111,10 +111,36 @@ actions: {
 }
 ```
 
-## Reuse
+## Reuse (multiple YouTube modals)
 
-## Customizing The YouTube Modal
+
+
+## Customize The YouTube Modal Controls
+
+If you, your designer, or your client don't like YouTube's default controls for whatever reason, then you're in luck because this addon gives you fully customizable controls.
+
+FIrst in your `modal-video` component, set `customControls` to be `true`
+
+```hbs
+// application.hbs
+{{modal-video
+    customControls = true
+}}
+```
+### Custom HTML
+
+```hbs
+// application.hbs
+{{modal-video
+    customControls = true
+
+    closeIcon = '<Your Custom Textm, HTML, or SVG>'
+    durationDivider = '<Your Custom Textm, HTML, or SVG>'
+    playIcon = '<Your Custom Textm, HTML, or SVG>'
+    pauseIcon = '<Your Custom Textm, HTML, or SVG>'
+}}
+```
 
 ## Further Customizations
 
-By the default the Youtube video modal is fullscreen, but this can be customized via css and by setting the `width` and `height` properties in the `modal-video` component.
+By the default the Youtube video modal is fullscreen, but this can be customized via CSS and by setting the `width` and `height` properties in the `modal-video` component.
