@@ -214,16 +214,16 @@ FIrst in your `modal-video` component, set `customControls` to be `true`
     customControls = true
 
     // The close modal icon
-    closeIcon = '<Your Custom Textm, HTML, or SVG>'
+    closeIcon = '<Your Custom Text, HTML, or SVG>'
     // The element between the elapsed time and the total time
     durationDivider = '<Your Custom Textm, HTML, or SVG>'
     // The play video icon
-    playIcon = '<Your Custom Textm, HTML, or SVG>'
+    playIcon = '<Your Custom Text, HTML, or SVG>'
     // The pause video icon
-    pauseIcon = '<Your Custom Textm, HTML, or SVG>'
+    pauseIcon = '<Your Custom Text, HTML, or SVG>'
 }}
 ```
 
 ## Further Customizations
 
-By the default the Youtube video modal is fullscreen, but this can be customized via CSS and by setting the `width` and `height` properties in the `modal-video` component.
+By default the Youtube video modal is fullscreen, but this can be customized via CSS and by setting the `width` and `height` properties in the `modal-video` component.
