@@ -22,12 +22,6 @@ export default Ember.Controller.extend({
         }
     },
 
-    init() {
-        this._super(...arguments);
-
-        // console.log(this.get('test'));
-    },
-
     test: Ember.computed('model', function() {
         let videos = this.get('model');
         return videos;

@@ -161,6 +161,8 @@ export default Ember.Controller.extend({
 });
 ```
 
+Create a videos gallery component and pass to down to it the `listOfVideos` model and the `openModal` action read from the applications controller.
+
 ```hbs
 // routes/videos.hbs
 
@@ -169,6 +171,7 @@ export default Ember.Controller.extend({
     openModal=(action "openModal")
 }}
 ```
+Define another `openModal` action in your `videos-gallery` component js file that will call the passed down `openModal` action.
 
 ```js
 // components/videos-gallery.js
@@ -178,6 +181,7 @@ export default Ember.Controller.extend({
         }
     }
 ```
+Add the `openModal` action to whatever DOM element you want to trigger an opened modal. Pass to it the `id` of the video.
 
 ```hbs
 // templates/componentsvideos-gallery.hbs
@@ -187,6 +191,8 @@ export default Ember.Controller.extend({
 {{/each}}
 
 ```
+
+That's it!
 
 ## Customize The YouTube Modal Controls
 

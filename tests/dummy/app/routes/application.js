@@ -24,10 +24,10 @@ let daVideos = [
         w: 1920,
         h: 1080
     }
-]
+];
 
 export default Ember.Route.extend({
     model() {
-        return daVideos
+        return daVideos;
     }
 });
