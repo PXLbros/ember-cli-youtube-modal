@@ -81,7 +81,8 @@ Then likewise pass the property down to your `{{modal-video}}` component.
 // application.hbs
 {{modal-video
     showVideoModal = showVideoModal  
-    **videoId=videoId**
+    
+    videoId=videoId
 }}
 ```
 
@@ -113,7 +114,85 @@ actions: {
 
 ## Reuse (multiple YouTube modals)
 
+Let's say you have a videos route/page and on that page you want to display a gallery of thumbnails that open up YouTube modals. Well you're in luck because this addon and its modal component is reusable. 
 
+In your `videos.js` route file, define your array of videos and pass it down as a model.
+
+```js
+...
+
+// routes/videos.js
+let listOfVideos = [
+    {
+        "name": "gleason",
+        "id": "WgkQU32XSFQ"
+    },
+    {
+        "name": "mothersday",
+        "id": "2BPr217zLps"
+    },
+    {
+        "name": "bleedforthis",
+        "id": "LiDO_sP00uk"
+    }
+];
+
+export default Ember.Route.extend({
+
+    model() {
+        return listOfVideos;
+    }
+
+});
+
+```
+
+Then in your `videos.js` controller file you have to inject into it the `application.js` controller and read its properties.
+
+```js
+// controllers/videos.js
+import Ember from 'ember';
+
+export default Ember.Controller.extend({
+
+    applicationController: Ember.inject.controller('application'),
+    daApplicationController: Ember.computed.reads('applicationController'),
+
+});
+```
+
+Create a videos gallery component and pass to down to it the `listOfVideos` model and the `openModal` action read from the applications controller.
+
+```hbs
+// routes/videos.hbs
+
+{{videos-gallery
+    videos=model
+    openModal=(action "openModal")
+}}
+```
+Define another `openModal` action in your `videos-gallery` component js file that will call the passed down `openModal` action.
+
+```js
+// components/videos-gallery.js
+    actions: {
+        openModal(id) {
+            this.get('openModal')(id);
+        }
+    }
+```
+Add the `openModal` action to whatever DOM element you want to trigger an opened modal. Pass to it the `id` of the video.
+
+```hbs
+// templates/componentsvideos-gallery.hbs
+
+{{#each videos as |video|}}
+    <button {{action "openModal" video.id}}>Open {{video.name}}</button>
+{{/each}}
+
+```
+
+That's it!
 
 ## Customize The YouTube Modal Controls
 
@@ -134,13 +213,17 @@ FIrst in your `modal-video` component, set `customControls` to be `true`
 {{modal-video
     customControls = true
 
-    closeIcon = '<Your Custom Textm, HTML, or SVG>'
+    // The close modal icon
+    closeIcon = '<Your Custom Text, HTML, or SVG>'
+    // The element between the elapsed time and the total time
     durationDivider = '<Your Custom Textm, HTML, or SVG>'
-    playIcon = '<Your Custom Textm, HTML, or SVG>'
-    pauseIcon = '<Your Custom Textm, HTML, or SVG>'
+    // The play video icon
+    playIcon = '<Your Custom Text, HTML, or SVG>'
+    // The pause video icon
+    pauseIcon = '<Your Custom Text, HTML, or SVG>'
 }}
 ```
 
 ## Further Customizations
 
-By the default the Youtube video modal is fullscreen, but this can be customized via CSS and by setting the `width` and `height` properties in the `modal-video` component.
+By default the Youtube video modal is fullscreen, but this can be customized via CSS and by setting the `width` and `height` properties in the `modal-video` component.

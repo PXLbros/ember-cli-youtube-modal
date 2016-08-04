@@ -14,13 +14,17 @@ export default Ember.Controller.extend({
         openModal(listOfVideos, videoId) {
             this.set('showVideoModal', true);
             this.set('videoId', listOfVideos[videoId]);
+        },
+
+        galleryOpenModal(id) {
+            this.set('showVideoModal', true);
+            this.set('videoId', id);
         }
     },
 
-    init() {
-        this._super(...arguments);
-
-        this.set('showVideoModal', true);
-    }
+    test: Ember.computed('model', function() {
+        let videos = this.get('model');
+        return videos;
+    })
 
 });
