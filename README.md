@@ -81,7 +81,8 @@ Then likewise pass the property down to your `{{modal-video}}` component.
 // application.hbs
 {{modal-video
     showVideoModal = showVideoModal  
-    **videoId=videoId**
+    
+    videoId=videoId
 }}
 ```
 
@@ -113,7 +114,79 @@ actions: {
 
 ## Reuse (multiple YouTube modals)
 
+Let's say you have a videos route/page and on that page you want to display a gallery of thumbnails that open up YouTube modals. Well you're in luck because this addon and its modal component is reusable. 
 
+In your `videos.js` route file, define your array of videos and pass it down as a model.
+
+```js
+...
+
+// routes/videos.js
+let listOfVideos = [
+    {
+        "name": "gleason",
+        "id": "WgkQU32XSFQ"
+    },
+    {
+        "name": "mothersday",
+        "id": "2BPr217zLps"
+    },
+    {
+        "name": "bleedforthis",
+        "id": "LiDO_sP00uk"
+    }
+];
+
+export default Ember.Route.extend({
+
+    model() {
+        return listOfVideos;
+    }
+
+});
+
+```
+
+Then in your `videos.js` controller file you have to inject into it the `application.js` controller and read its properties.
+
+```js
+// controllers/videos.js
+import Ember from 'ember';
+
+export default Ember.Controller.extend({
+
+    applicationController: Ember.inject.controller('application'),
+    daApplicationController: Ember.computed.reads('applicationController'),
+
+});
+```
+
+```hbs
+// routes/videos.hbs
+
+{{videos-gallery
+    videos=model
+    openModal=(action "openModal")
+}}
+```
+
+```js
+// components/videos-gallery.js
+    actions: {
+        openModal(id) {
+            this.get('openModal')(id);
+        }
+    }
+```
+
+```hbs
+// templates/componentsvideos-gallery.hbs
+
+{{#each videos as |video|}}
+    <button {{action "openModal" video.id}}>Open {{video.name}}</button>
+{{/each}}
+
+```
 
 ## Customize The YouTube Modal Controls
 
@@ -134,9 +207,13 @@ FIrst in your `modal-video` component, set `customControls` to be `true`
 {{modal-video
     customControls = true
 
+    // The close modal icon
     closeIcon = '<Your Custom Textm, HTML, or SVG>'
+    // The element between the elapsed time and the total time
     durationDivider = '<Your Custom Textm, HTML, or SVG>'
+    // The play video icon
     playIcon = '<Your Custom Textm, HTML, or SVG>'
+    // The pause video icon
     pauseIcon = '<Your Custom Textm, HTML, or SVG>'
 }}
 ```

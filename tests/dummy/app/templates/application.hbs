@@ -15,6 +15,17 @@
 
 
 
-<button {{action "openModal" listOfVideos "gleason"}}>Open gleason</button>
+{{!-- <button {{action "openModal" listOfVideos "gleason"}}>Open gleason</button>
 <button {{action "openModal" listOfVideos "mothersday"}}>Open mothersday</button>
 <button {{action "openModal" listOfVideos "bleedforthis"}}>Open bleedforthis</button>
+
+{{#each-in listOfVideos as |name id|}}
+    <a href="#" {{action 'galleryOpenModal' id}}><img src="http://placehold.it/300x250" alt=""></a>
+    <a href="#" {{action "galleryOpenModal" id}}>{{name}}</a>
+{{/each-in}} --}}
+
+<br />
+<br />
+<br />
+
+{{outlet}}
