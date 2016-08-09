@@ -33,20 +33,35 @@ export default Ember.Component.extend({
     /*
      * State
      */
+
+     // show whether the video modal is visible or hidden
     showVideoModal: false,
 
+    // is the video playing?
     isPlaying: true,
 
+    // The progress percentage
     percent: null,
 
+    // Player video length
     duration: null,
 
+    // Player video elapsed
     time: 0,
 
-    ticking: true,
-
+    // Is the progress bar being dragged/scrubbed?
     isDragging: false,
 
+    // Did the user manually pause the video?
+    isManualStop: false,
+
+    // Track if page is visible or hidden
+    hidden: null,
+
+    // Vendor prefixed visibilitychange API
+    visibilityChange: null,
+
+    // are custom controls enabled or disabled?
     getCustomControls: function() {
         var self = this;
 
@@ -54,7 +69,7 @@ export default Ember.Component.extend({
         // If customControls is set to `true, then hide the default controls
         // If `false`, then reveal the default controls
         if (self.get('customControls') === true) {
-            return 0
+            return 0;
         } else {
             return 1;
         }
@@ -66,9 +81,60 @@ export default Ember.Component.extend({
     init() {
         this._super(...arguments);
 
+        // Handle the prefixing of the visibilitychange API
+        this.get('prefixVisibilityChange').call(this);
+
+        // Handle page visibility change
+        document.addEventListener(this.get('visibilityChange'), this.get('handleVisibilityChange').bind(this), false);
 
     },
 
+    /*
+     * Passive Methods
+     */
+
+    // Perform a browser check to handle prefixing for the visibilitychange API
+    prefixVisibilityChange() {
+        if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
+            this.set('hidden', 'hidden');
+            this.set('visibilityChange', 'visibilitychange');
+        } else if (typeof document.mozHidden !== "undefined") {
+            this.set('hidden', 'mozHidden');
+            this.set('visibilityChange', 'mozvisibilitychange');
+        } else if (typeof document.msHidden !== "undefined") {
+            this.set('hidden', 'msHidden');
+            this.set('visibilityChange', 'msvisibilitychange');
+        } else if (typeof document.webkitHidden !== "undefined") {
+            this.set('hidden', 'webkitHidden');
+            this.set('visibilityChange', 'webkitvisibilitychange');
+        }
+    },
+
+    // Detect when the page is visible or hidden
+    handleVisibilityChange() {
+
+        var self = this;
+
+        if (document[this.get('hidden')]) {
+
+            if ( self.get('showVideoModal') ) {
+                self.get('Player').pauseVideo();
+                self.set('isPlaying', false);
+
+                self.get('$progressBar').stop();
+                Ember.run.cancel(vidClock);
+            }
+
+        } else {
+            if (self.get('showVideoModal')) {
+
+                self.get('Player').playVideo();
+                self.set('isPlaying', true);
+
+            }
+        }
+
+    },
 
     /*
      * Actions
@@ -82,6 +148,7 @@ export default Ember.Component.extend({
         }
     },
 
+    // Closes the video modal
     closeModal() {
         var self = this;
 
@@ -103,10 +170,11 @@ export default Ember.Component.extend({
             self.set('duration', 0);
 
             Ember.$('.yt-overlay').removeAttr('style');
-        }, 500)
+        }, 500);
 
     },
 
+    // Opens or closes the video modal
     toggleVideo() {
         var self = this;
 
@@ -143,7 +211,7 @@ export default Ember.Component.extend({
     },
 
     // Detect if click is left button
-    detectLeftButton: function(evt) {
+    detectLeftButton: function(event) {
         if ('buttons' in event) {
             return event.buttons === 1;
         } else if ('which' in event) {
@@ -162,6 +230,7 @@ export default Ember.Component.extend({
         }, speed, 'linear');
     },
 
+    // When the user manually scrubs the progress bar
     scrubProgressBar: function() {
         var self = this;
 
@@ -196,7 +265,7 @@ export default Ember.Component.extend({
 
             poll = function() {
                 vidClock = Ember.run.later(progresser, 100);
-            }
+            };
 
             poll();
 
@@ -234,6 +303,7 @@ export default Ember.Component.extend({
 
     },
 
+    // When the Player starts
     onPlayerReady: function(event) {
         var self = this;
 
@@ -246,6 +316,7 @@ export default Ember.Component.extend({
         Ember.$('.yt-overlay').delay(500).fadeOut();
     },
 
+    // Anytime the Player plays, pauses, or stops
     onPlayerStateChange: function(event) {
         var self = this;
 
@@ -258,6 +329,7 @@ export default Ember.Component.extend({
             Ember.run.cancel(vidClock);
 
             self.set('isPlaying', false);
+
         }
 
         else if (event.data === YT.PlayerState.ENDED) {

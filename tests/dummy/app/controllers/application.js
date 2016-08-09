@@ -2,7 +2,8 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
 
-    showVideoModal: false,
+    showVideoModal: true,
+    videoId: "WgkQU32XSFQ",
 
     listOfVideos: {
         "gleason": "WgkQU32XSFQ",

@@ -55,7 +55,7 @@ But before you can use the addon, you must do some initial setup work In your co
 First you define a `showVideoModal` property and set it to be `false`.
 
 ```js
-// application.js
+// controller/application.js
 showVideoModal: false
 ```
 
@@ -88,12 +88,12 @@ Then likewise pass the property down to your `{{modal-video}}` component.
 
 That's it for the initial setup.
 
-## How To Open And Play YouTube-Modal
+## How To Open And Play the YouTube-Modal video
 
-To open and play after the page loads set `showVideoModal` to `true` in the `init()` function.
+To open the modal and play the video after the page loads, you have to set `showVideoModal` to `true` in the `init()` function.
 
 ```js
-// application.js
+// controllers/application.js
 init() {
     this._super(...arguments);
 
