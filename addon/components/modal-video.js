@@ -56,6 +56,9 @@ export default Ember.Component.extend({
     isManualStop: false,
 
     // Track if page is visible or hidden
+    isHidden: null,
+
+    // Vendor prefixed hidden API
     hidden: null,
 
     // Vendor prefixed visibilitychange API
@@ -123,13 +126,19 @@ export default Ember.Component.extend({
 
                 self.get('$progressBar').stop();
                 Ember.run.cancel(vidClock);
+
+                self.set('isHidden', true);
             }
 
         } else {
             if (self.get('showVideoModal')) {
 
-                self.get('Player').playVideo();
-                self.set('isPlaying', true);
+                if ( !self.get('isManualStop') ) {
+                    self.get('Player').playVideo();
+                    self.set('isPlaying', true);
+                }
+
+                self.set('isHidden', false);
 
             }
         }
@@ -187,8 +196,9 @@ export default Ember.Component.extend({
 
         } else {
 
-            self.get('Player').playVideo();
-            self.set('isPlaying', true);
+                self.get('Player').playVideo();
+                self.set('isPlaying', true);
+
         }
     },
 
@@ -322,6 +332,12 @@ export default Ember.Component.extend({
 
         if (event.data === YT.PlayerState.PLAYING) {
             self.set('isPlaying', true);
+
+            // If the the page hasn't been hidden by page visibility change event and the user manually turned on the video, then set `isManualStop` to false
+            if ( !self.get('isHidden')) {
+                self.set('isManualStop', false);
+            }
+
         }
 
         else if (event.data === YT.PlayerState.PAUSED) {
@@ -329,6 +345,11 @@ export default Ember.Component.extend({
             Ember.run.cancel(vidClock);
 
             self.set('isPlaying', false);
+
+            // If the the page has been hidden by page visibility change event and the user manually turned on the video, then set `isManualStop` to true
+            if ( !self.get('isHidden')) {
+                self.set('isManualStop', true);
+            }
 
         }
 
