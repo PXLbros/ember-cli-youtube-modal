@@ -226,4 +226,4 @@ FIrst in your `modal-video` component, set `customControls` to be `true`
 
 ## Further Customizations
 
-By default the Youtube video modal is fullscreen, but this can be customized via CSS and by setting the `width` and `height` properties in the `modal-video` component.
+By default the Youtube video modal is fullscreen. If you want to customzie this look, you have to manually adjust the CSS and by setting the `width` and `height` properties in the `modal-video` component.

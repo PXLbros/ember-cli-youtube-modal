@@ -134,7 +134,7 @@ export default Ember.Component.extend({
             if (self.get('showVideoModal')) {
 
                 if ( !self.get('isManualStop') ) {
-                    self.get('Player').playVideo();
+                    self.get('Player').startVideo();
                     self.set('isPlaying', true);
                 }
 
@@ -196,7 +196,7 @@ export default Ember.Component.extend({
 
         } else {
 
-                self.get('Player').playVideo();
+                self.get('Player').startVideo();
                 self.set('isPlaying', true);
 
         }
@@ -318,7 +318,7 @@ export default Ember.Component.extend({
         var self = this;
 
         event.target.setVolume(100);
-        event.target.playVideo();
+        event.target.startVideo();
         self.set('isPlaying', true);
 
         self.set('duration', self.get('Player').getDuration() - 1);
@@ -363,7 +363,7 @@ export default Ember.Component.extend({
     },
 
     // This method will run if the showVideoModal property changes
-    playVideo: function() {
+    startVideo: function() {
 
         Ember.run.scheduleOnce('afterRender', this, function() {
 
@@ -414,7 +414,7 @@ export default Ember.Component.extend({
             this.get('dragging').call(this);
 
             // Play Video if showVideoModal is set to true
-            self.get('playVideo').call(self);
+            self.get('startVideo').call(self);
 
         });
     },
