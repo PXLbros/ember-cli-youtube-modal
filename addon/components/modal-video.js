@@ -64,6 +64,9 @@ export default Ember.Component.extend({
     // Vendor prefixed visibilitychange API
     visibilityChange: null,
 
+    // is the overlay enabled or disabled?
+    videoOverlay: true,
+
     // are custom controls enabled or disabled?
     getCustomControls: function() {
         var self = this;
@@ -118,32 +121,41 @@ export default Ember.Component.extend({
 
         var self = this;
 
+        // If the document is hidden
         if (document[this.get('hidden')]) {
-
+            // If the modal is visible
             if ( self.get('showVideoModal') ) {
+                // Pause the video
                 self.get('Player').pauseVideo();
                 self.set('isPlaying', false);
 
+                // Pause the custom control progress bar
                 self.get('$progressBar').stop();
                 Ember.run.cancel(vidClock);
 
+                // Set page visibility to hidden
                 self.set('isHidden', true);
             }
 
+        // If the document is visible
         } else {
+            // If the modal is visible
             if (self.get('showVideoModal')) {
 
+                // If the user didn't manually paused/stopped the video
                 if ( !self.get('isManualStop') ) {
+                    // Play the video
                     self.get('Player').startVideo();
                     self.set('isPlaying', true);
                 }
 
+                // Set page visibility to visible
                 self.set('isHidden', false);
 
             }
         }
 
-    },
+    }, // end handleVisibilityChange()
 
     /*
      * Actions
@@ -318,7 +330,7 @@ export default Ember.Component.extend({
         var self = this;
 
         event.target.setVolume(100);
-        event.target.startVideo();
+        event.target.playVideo();
         self.set('isPlaying', true);
 
         self.set('duration', self.get('Player').getDuration() - 1);

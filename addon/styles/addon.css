@@ -1,3 +1,6 @@
+/*
+ * Modal
+ */
 .modal-video {
     position: fixed;
     top: 0;
@@ -16,15 +19,6 @@
 
 }
 
-.modal-video button {
-    border: 0;
-    border-radius: 0;
-    padding: 0;
-    background: none;
-    outline: none;
-    color: #FFF;
-}
-
 .modal-video.is-open {
     opacity: 1;
     pointer-events: visible;
@@ -35,9 +29,13 @@
     position: absolute;
     top: 80px;
     right: 20px;
-
-
-
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    background: none;
+    outline: none;
+    color: #FFF;
+    z-index: 10;
 }
 
 .modal-video-close:hover {
@@ -49,6 +47,19 @@
     height: 30px;
 }
 
+/*
+ * Youtube Player
+ */
+
+.yt-wrapper {
+/*    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    width: 80%;
+    padding-bottom: 56.25%;*/
+}
+
 .yt-overlay {
     position: absolute;
     top: 0;
@@ -56,9 +67,11 @@
     bottom: 0;
     left: 0;
     background: rgba(0, 0, 0, 1);
+    z-index: 5;
 }
 
 .yt-player {
+    position: absolute;
     width: 100%;
     height: 100%;
 }
@@ -69,6 +82,7 @@
     color: white;
 
     width: 100%;
+    z-index: 10;
 }
 
 .yt-toggle {

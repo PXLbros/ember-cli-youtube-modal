@@ -2,37 +2,45 @@
     {{{close-icon this.closeIcon}}}
 </button>
 
-{{!-- Video Overlay --}}
-<div class="yt-overlay"></div>
 
-{{!-- Video Target --}}
-<div id="player" class="yt-player"></div>
 
-{{#if customControls}}
-{{!-- #Video UI --}}
-<div class="yt-controls">
+<div class="yt-wrapper">
 
-    {{!-- Clock --}}
-    <div class="yt-duration">{{seconds-to-minutes this.time}} <span class="yt-duration-divider">{{duration-divider this.durationDivider}}</span> {{seconds-to-minutes this.duration}}</div>
+    {{!-- Video Overlay --}}
+    {{#if videoOverlay}}
+        <div class="yt-overlay"></div>
+    {{/if}}
 
-    {{!-- Play/Pause button --}}
-    <button class="yt-toggle" {{action "toggleVideo"}}>
-        {{!-- Icon --}}
-        <div class="yt-toggle-icon-holder {{unless isPlaying "is-paused"}}">
-            {{!-- Play / Play/Pause --}}
-            <div class="yt-toggle-icon mod-play">{{{play-icon this.playIcon}}}</div>
-            {{!-- Pause --}}
-            {{{pause-icon this.pauseIcon}}}
+    {{!-- Video Target --}}
+    <div id="player" class="yt-player"></div>
+
+    {{#if customControls}}
+    {{!-- #Video UI --}}
+    <div class="yt-controls">
+
+        {{!-- Clock --}}
+        <div class="yt-duration">{{seconds-to-minutes this.time}} <span class="yt-duration-divider">{{duration-divider this.durationDivider}}</span> {{seconds-to-minutes this.duration}}</div>
+
+        {{!-- Play/Pause button --}}
+        <button class="yt-toggle" {{action "toggleVideo"}}>
+            {{!-- Icon --}}
+            <div class="yt-toggle-icon-holder {{unless isPlaying "is-paused"}}">
+                {{!-- Play / Play/Pause --}}
+                <div class="yt-toggle-icon mod-play">{{{play-icon this.playIcon}}}</div>
+                {{!-- Pause --}}
+                {{{pause-icon this.pauseIcon}}}
+            </div>
+        </button>
+
+        {{!-- Progress Bar / Scrub --}}
+        <div class="progress-container">
+            <div class="progress"></div>
         </div>
-    </button>
 
-    {{!-- Progress Bar / Scrub --}}
-    <div class="progress-container">
-        <div class="progress"></div>
-    </div>
+        {{!-- Fullscreen button --}}
+        {{!-- <button class="yt-fullscreen-toggle" {{action "toggleFullscreen"}}>Fullscreen</button> --}}
 
-    {{!-- Fullscreen button --}}
-    {{!-- <button class="yt-fullscreen-toggle" {{action "toggleFullscreen"}}>Fullscreen</button> --}}
+    </div>{{!-- #Video UI --}}
+    {{/if}}
+</div>
 
-</div>{{!-- #Video UI --}}
-{{/if}}
