@@ -81,6 +81,7 @@ export default Ember.Component.extend({
         }
     },
 
+
     /*
      * Init
      */
@@ -208,7 +209,7 @@ export default Ember.Component.extend({
 
         } else {
 
-                self.get('Player').startVideo();
+                self.get('Player').playVideo();
                 self.set('isPlaying', true);
 
         }

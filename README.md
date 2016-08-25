@@ -55,7 +55,7 @@ But before you can use the addon, you must do some initial setup work In your co
 First you define a `showVideoModal` property and set it to be `false`.
 
 ```js
-// controller/application.js
+// controllers/application.js
 showVideoModal: false
 ```
 
@@ -64,14 +64,14 @@ Then pass the property down to your `{{modal-video}}` component. I recommend you
 ```hbs
 // application.hbs
 {{modal-video
-    showVideoModal = showVideoModal
+    showVideoModal=showVideoModal
 }}
 ```
 
 Next you define a `videoId` property whose value is the id of your YouTube video.
 
 ```js
-// application.js
+// controllers/application.js
 videoId: <Your YouTube Video ID>
 ```
 
@@ -81,7 +81,6 @@ Then likewise pass the property down to your `{{modal-video}}` component.
 // application.hbs
 {{modal-video
     showVideoModal = showVideoModal  
-    
     videoId=videoId
 }}
 ```
@@ -160,6 +159,14 @@ export default Ember.Controller.extend({
 
 });
 ```
+
+Once you've injected the controller `application.js` into your `videos.js` controller file
+
+```js
+// controllers/videos.js
+
+```
+
 
 Create a videos gallery component and pass to down to it the `listOfVideos` model and the `openModal` action read from the applications controller.
 
