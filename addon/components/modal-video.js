@@ -146,7 +146,7 @@ export default Ember.Component.extend({
                 // If the user didn't manually paused/stopped the video
                 if ( !self.get('isManualStop') ) {
                     // Play the video
-                    self.get('Player').startVideo();
+                    self.get('Player').playVideo();
                     self.set('isPlaying', true);
                 }
 
@@ -206,12 +206,9 @@ export default Ember.Component.extend({
 
             self.get('$progressBar').stop();
             Ember.run.cancel(vidClock);
-
         } else {
-
-                self.get('Player').playVideo();
-                self.set('isPlaying', true);
-
+            self.get('Player').playVideo();
+            self.set('isPlaying', true);
         }
     },
 
@@ -245,12 +242,20 @@ export default Ember.Component.extend({
     },
 
     // For progress bar animation
-    animateProgressBar: function(percent, speed) {
+    animateProgressBar: function(percent, speed, scrubbing) {
         var self = this;
 
         self.get('$progressBar').animate({
             'width': percent + '%',
-        }, speed, 'linear');
+        }, speed, 'linear', function() {
+
+            if (scrubbing) {
+                Ember.run.later(function() {
+                    self.get('Player').playVideo();
+                }, 150)
+            }
+
+        });
     },
 
     // When the user manually scrubs the progress bar
@@ -264,7 +269,8 @@ export default Ember.Component.extend({
         self.get('$progressBar').stop();
         Ember.run.cancel(vidClock);
 
-        self.get('animateProgressBar').call(self, self.get('xPos'), 0);
+        self.get('animateProgressBar').call(self, self.get('xPos'), 0, true);
+
     },
 
     // For progress bar logic

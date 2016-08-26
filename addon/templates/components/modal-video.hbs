@@ -17,34 +17,35 @@
     {{#if customControls}}
     {{!-- #Video UI --}}
         <div class="yt-controls">
+            <div class="yt-controls-wrapper">
+                {{!-- Play/Pause button --}}
+                <button class="yt-toggle" {{action "toggleVideo"}}>
+                    {{!-- Icon --}}
+                    {{#if this.playIcon}}
+                        {{!-- Custom Icon --}}
+                        <div class="yt-toggle-icon-holder {{unless isPlaying "is-paused"}}">
+                            {{!-- Play / Play/Pause --}}
+                            <div class="yt-toggle-icon mod-play">{{{play-icon this.playIcon}}}</div>
+                            {{!-- Pause --}}
+                            {{{pause-icon this.pauseIcon}}}
+                        </div>
+                    {{else}}
+                        {{!-- Default Icon --}}
+                        <div class="yt-toggle-icon mod-toggle {{unless isPlaying "is-paused"}}">{{{play-icon this.playIcon}}}</div>
+                    {{/if}}
+                </button>
 
-            {{!-- Play/Pause button --}}
-            <button class="yt-toggle" {{action "toggleVideo"}}>
-                {{!-- Icon --}}
-                {{#if this.playIcon}}
-                    {{!-- Custom Icon --}}
-                    <div class="yt-toggle-icon-holder {{unless isPlaying "is-paused"}}">
-                        {{!-- Play / Play/Pause --}}
-                        <div class="yt-toggle-icon mod-play">{{{play-icon this.playIcon}}}</div>
-                        {{!-- Pause --}}
-                        {{{pause-icon this.pauseIcon}}}
-                    </div>
-                {{else}}
-                    {{!-- Default Icon --}}
-                    <div class="yt-toggle-icon mod-toggle {{unless isPlaying "is-paused"}}">{{{play-icon this.playIcon}}}</div>
-                {{/if}}
-            </button>
+                {{!-- Clock --}}
+                <div class="yt-duration">{{seconds-to-minutes this.time}} <span class="yt-duration-divider">{{duration-divider this.durationDivider}}</span> {{seconds-to-minutes this.duration}}</div>
 
-            {{!-- Clock --}}
-            <div class="yt-duration">{{seconds-to-minutes this.time}} <span class="yt-duration-divider">{{duration-divider this.durationDivider}}</span> {{seconds-to-minutes this.duration}}</div>
+                {{!-- Progress Bar / Scrub --}}
+                <div class="progress-container">
+                    <div class="progress"></div>
+                </div>
 
-            {{!-- Progress Bar / Scrub --}}
-            <div class="progress-container">
-                <div class="progress"></div>
+                {{!-- Fullscreen button --}}
+                {{!-- <button class="yt-fullscreen-toggle" {{action "toggleFullscreen"}}>Fullscreen</button> --}}
             </div>
-
-            {{!-- Fullscreen button --}}
-            {{!-- <button class="yt-fullscreen-toggle" {{action "toggleFullscreen"}}>Fullscreen</button> --}}
 
         </div>{{!-- #Video UI --}}
     {{/if}}
