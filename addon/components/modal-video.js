@@ -2,39 +2,42 @@ import Ember from 'ember';
 import layout from '../templates/components/modal-video';
 
 
-var poll;
-var vidClock;
+let poll;
+let vidClock;
 
 export default Ember.Component.extend({
     layout,
 
+    /*------------------------------------*\
+      ELEMENT ATTRIBUTES
+    \*------------------------------------*/
     classNames: ['modal-video'],
-
     classNameBindings: ['showVideoModal:is-open'],
 
-    Player: null,
 
+    /*------------------------------------*\
+      YOUTUBE PROPERTIES
+    \*------------------------------------*/
+    Player: null,
     videoId: null,
 
-    /*
-     * Selectors
-     */
+
+    /*------------------------------------*\
+      SELECTORS
+    \*------------------------------------*/
     $progressContainer: null,
-
     $progressBar: null,
-
     $ytDuration: null,
 
-    /*
-     * No idea
-     */
-     xPos: 0,
 
-    /*
-     * State
-     */
+    /*------------------------------------*\
+      STATE
+    \*------------------------------------*/
 
-     // show whether the video modal is visible or hidden
+    // the x position of the youtube progress bar
+    xPos: 0,
+
+    // show whether the video modal is visible or hidden
     showVideoModal: false,
 
     // is the video playing?
@@ -82,9 +85,9 @@ export default Ember.Component.extend({
     },
 
 
-    /*
-     * Init
-     */
+    /*------------------------------------*\
+      INIT
+    \*------------------------------------*/
     init() {
         this._super(...arguments);
 
@@ -96,10 +99,23 @@ export default Ember.Component.extend({
 
     },
 
-    /*
-     * Passive Methods
-     */
 
+    /*------------------------------------*\
+      ACTIONS
+    \*------------------------------------*/
+    actions: {
+        closeModal() {
+            this.closeModal();
+        },
+        toggleVideo() {
+            this.toggleVideo();
+        }
+    },
+
+
+    /*------------------------------------*\
+      METHODS
+    \*------------------------------------*/
     // Perform a browser check to handle prefixing for the visibilitychange API
     prefixVisibilityChange() {
         if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
@@ -158,18 +174,6 @@ export default Ember.Component.extend({
 
     }, // end handleVisibilityChange()
 
-    /*
-     * Actions
-     */
-    actions: {
-        closeModal() {
-            this.closeModal();
-        },
-        toggleVideo() {
-            this.toggleVideo();
-        }
-    },
-
     // Closes the video modal
     closeModal() {
         var self = this;
@@ -212,11 +216,7 @@ export default Ember.Component.extend({
         }
     },
 
-
-    /*
-     * Functions / Methods
-     */
-
+    // INITIALIZE SELECTORS
     initializeSelectors: function() {
         var self = this;
 
@@ -384,7 +384,7 @@ export default Ember.Component.extend({
     // This method will run if the showVideoModal property changes
     startVideo: function() {
 
-        Ember.run.scheduleOnce('afterRender', this, function() {
+        Ember.run.scheduleOnce('afterRender', () => {
 
             var self = this;
 
@@ -418,33 +418,32 @@ export default Ember.Component.extend({
     }.observes('showVideoModal'),
 
 
-    /*
-     * didInsertElement
-     */
+    /*------------------------------------*\
+      DID INSERT ELEMENT
+    \*------------------------------------*/
     didInsertElement: function() {
-        Ember.run.scheduleOnce('afterRender', this, function() {
-
-            var self = this;
+        Ember.run.scheduleOnce('afterRender', () => {
 
             // Initialize selectors
-            this.get('initializeSelectors').call(this);
+            this.initializeSelectors();
 
             // Initialize progress bar scrubbing
-            this.get('dragging').call(this);
+            this.dragging();
 
             // Play Video if showVideoModal is set to true
-            self.get('startVideo').call(self);
+            this.startVideo();
 
-        });
-    },
+        }); // END `afterRender`
+    }, // END `didInsertElement`
 
-    /*
-     * willDestroyElement
-     */
+
+    /*------------------------------------*\
+      WILL DESTROY ELEMENT
+    \*------------------------------------*/
     willDestroyElement: function() {
         this._super(...arguments);
-
+        // CLOSE THE MODAL IF THE ELEMENT IS DESTROYED
         this.closeModal();
     }
 
-});
+}); // END `Ember.Component.extend`

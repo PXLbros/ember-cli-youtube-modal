@@ -157,6 +157,10 @@
     background: white;
 }
 
+.progress-container:hover {
+    cursor: pointer;
+}
+
 .progress-appearance {
     width: 100%;
     height: 100%;

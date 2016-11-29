@@ -42,13 +42,18 @@ For more information on using ember-cli, visit [http://ember-cli.com/](http://em
 
 # How To Use Youtube-Modal 
 
-## initial Setup
+## Examples
+
+[http://bleedforthisfilm.com](http://bleedforthisfilm.com)
+[http://gleasonmovie.com](http://gleasonmovie.com)
+
+## Initial Setup
 
 In your Ember app's root directory run
 
 `npm install ember-cli-youtube-modal --save`
 
-Once the addon is installed, the component `{{modal-video}}` will become available to your Ember App. 
+Once the addon is installed, the component `{{modal-video}}` will become available to your Ember App as a modal element containing an initialized YouTube player. 
 
 But before you can use the addon, you must do some initial setup work In your component's parent controller, ideally in the `application.js` controller.
 
@@ -95,7 +100,7 @@ To open the modal and play the video after the page loads, you have to set `show
 // controllers/application.js
 init() {
     this._super(...arguments);
-
+    // Opens the video modal
     this.set('showVideoModal', true);
 }
 ```
@@ -113,7 +118,7 @@ actions: {
 
 ## Reuse (multiple YouTube modals)
 
-Let's say you have a videos route/page and on that page you want to display a gallery of thumbnails that open up YouTube modals. Well you're in luck because this addon and its modal component is reusable. 
+Let's say you have a videos route/page and on that page you want to display a gallery of thumbnails and each thumbnail opens up a corresponding YouTube modal. Well you're in luck because this addon provides a reusable modal component! 
 
 In your `videos.js` route file, define your array of videos and pass it down as a model.
 
