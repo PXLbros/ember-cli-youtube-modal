@@ -9,6 +9,33 @@ export default Ember.Component.extend({
     layout,
 
     /*------------------------------------*\
+      SERVICES
+    \*------------------------------------*/
+    youtubeModalService: Ember.inject.service('youtube-modal-service'),
+
+
+    /*------------------------------------*\
+      INIT
+    \*------------------------------------*/
+    init() {
+        this._super(...arguments);
+
+        // Handle the prefixing of the visibilitychange API
+        this.get('prefixVisibilityChange').call(this);
+
+        // Handle page visibility change
+        document.addEventListener(this.get('visibilityChange'), this.get('handleVisibilityChange').bind(this), false);
+
+        let showVideoModal = this.get('youtubeModalService').showVideoModal;
+
+        this.set('showVideoModal', showVideoModal);
+
+        console.log(this.get('showVideoModal'));
+
+    },
+
+
+    /*------------------------------------*\
       ELEMENT ATTRIBUTES
     \*------------------------------------*/
     classNames: ['modal-video'],
@@ -20,6 +47,7 @@ export default Ember.Component.extend({
     \*------------------------------------*/
     Player: null,
     videoId: null,
+    startTime: null,
 
 
     /*------------------------------------*\
@@ -37,7 +65,7 @@ export default Ember.Component.extend({
     // the x position of the youtube progress bar
     xPos: 0,
 
-    // show whether the video modal is visible or hidden
+    // SHOULD THE VIDEO MODAL BE VISIBLE?
     showVideoModal: false,
 
     // is the video playing?
@@ -82,21 +110,6 @@ export default Ember.Component.extend({
         } else {
             return 1;
         }
-    },
-
-
-    /*------------------------------------*\
-      INIT
-    \*------------------------------------*/
-    init() {
-        this._super(...arguments);
-
-        // Handle the prefixing of the visibilitychange API
-        this.get('prefixVisibilityChange').call(this);
-
-        // Handle page visibility change
-        document.addEventListener(this.get('visibilityChange'), this.get('handleVisibilityChange').bind(this), false);
-
     },
 
 
@@ -252,7 +265,7 @@ export default Ember.Component.extend({
             if (scrubbing) {
                 Ember.run.later(function() {
                     self.get('Player').playVideo();
-                }, 150)
+                }, 150);
             }
 
         });
@@ -390,6 +403,7 @@ export default Ember.Component.extend({
 
             // get the passed in video id
             let videoId = self.get('videoId');
+            let startTime = self.get('startTime');
             let Player;
 
             // If the youtube player hasn't been initialized
@@ -401,7 +415,8 @@ export default Ember.Component.extend({
                     height: self.get('height'),
                     videoId: videoId,
                     playerVars: {
-                        'controls': self.get('getCustomControls').call(self)
+                        'controls': self.get('getCustomControls').call(self),
+                        'start': startTime
                     },
                     events: {
                         'onReady': self.get('onPlayerReady').bind(self),

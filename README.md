@@ -57,7 +57,7 @@ Once the addon is installed, the component `{{modal-video}}` will become availab
 
 But before you can use the addon, you must do some initial setup work In your component's parent controller, ideally in the `application.js` controller.
 
-First you define a `showVideoModal` property and set it to be `false`.
+First you define a `showVideoModal` property and set it to be `false`. This property deteremines whether or not the YouTube video modal is visible or not. By default you want it to be hidden unless some event triggers it to be visible.
 
 ```js
 // controllers/application.js
@@ -213,7 +213,7 @@ If you, your designer, or your client don't like YouTube's default controls for 
 FIrst in your `modal-video` component, set `customControls` to be `true`
 
 ```hbs
-// application.hbs
+{{!-- application.hbs --}}
 {{modal-video
     customControls = true
 }}
@@ -221,14 +221,14 @@ FIrst in your `modal-video` component, set `customControls` to be `true`
 ### Custom HTML
 
 ```hbs
-// application.hbs
+{{!-- application.hbs --}} 
 {{modal-video
     customControls = true
 
     // The close modal icon
     closeIcon = '<Your Custom Text, HTML, or SVG>'
     // The element between the elapsed time and the total time
-    durationDivider = '<Your Custom Textm, HTML, or SVG>'
+    durationDivider = '<Your Custom Text, HTML, or SVG>'
     // The play video icon
     playIcon = '<Your Custom Text, HTML, or SVG>'
     // The pause video icon
