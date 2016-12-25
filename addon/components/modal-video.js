@@ -30,7 +30,7 @@ export default Ember.Component.extend({
 
         this.set('showVideoModal', showVideoModal);
 
-        console.log(this.get('showVideoModal'));
+        // console.log(this.get('showVideoModal'));
 
     },
 
