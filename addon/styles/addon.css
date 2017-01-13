@@ -1,7 +1,7 @@
-/*
- * Modal
- */
-.modal-video {
+/*------------------------------------*\
+  YOUTUBE MODAL
+\*------------------------------------*/
+.youtube-modal {
     position: fixed;
     top: 0;
     right: 0;
@@ -10,22 +10,19 @@
     width: 100%;
     height: 100%;
     background: #000;
-
     opacity: 0;
     pointer-events: none;
     visibility: hidden;
-
     font-family: Helvetica, Arial, sans-serif;
-
 }
 
-.modal-video.is-open {
+.youtube-modal.is-open {
     opacity: 1;
     pointer-events: visible;
     visibility: visible;
 }
 
-.modal-video-close {
+.youtube-modal__close {
     position: absolute;
     top: 80px;
     right: 20px;
@@ -38,28 +35,19 @@
     z-index: 10;
 }
 
-.modal-video-close:hover {
+.youtube-modal__close:hover {
     cursor: pointer;
 }
 
-.modal-video-close svg {
+.youtube-modal__close svg {
     width: 30px;
     height: 30px;
 }
 
-/*
- * Youtube Player
- */
 
-.yt-wrapper {
-/*    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    width: 80%;
-    padding-bottom: 56.25%;*/
-}
-
+/*------------------------------------*\
+  YOUTUBE VIDEO
+\*------------------------------------*/
 .yt-overlay {
     position: absolute;
     top: 0;

@@ -7,6 +7,11 @@ let vidClock;
 
 export default Ember.Component.extend({
     layout,
+    /*------------------------------------*\
+      ELEMENT ATTRIBUTES
+    \*------------------------------------*/
+    classNames: ['youtube-modal'],
+    classNameBindings: ['showVideoModal:is-open'],
 
     /*------------------------------------*\
       SERVICES
@@ -33,13 +38,6 @@ export default Ember.Component.extend({
         // console.log(this.get('showVideoModal'));
 
     },
-
-
-    /*------------------------------------*\
-      ELEMENT ATTRIBUTES
-    \*------------------------------------*/
-    classNames: ['modal-video'],
-    classNameBindings: ['showVideoModal:is-open'],
 
 
     /*------------------------------------*\
