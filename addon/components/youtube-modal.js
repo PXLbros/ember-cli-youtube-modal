@@ -1,9 +1,5 @@
 import Ember from 'ember';
-import layout from '../templates/components/modal-video';
-
-
-let poll;
-let vidClock;
+import layout from '../templates/components/youtube-modal';
 
 export default Ember.Component.extend({
     layout,
@@ -96,6 +92,10 @@ export default Ember.Component.extend({
     // is the overlay enabled or disabled?
     videoOverlay: true,
 
+    vidClock: undefined,
+
+    poll: undefined,
+
     // are custom controls enabled or disabled?
     getCustomControls: function() {
         var self = this;
@@ -147,7 +147,7 @@ export default Ember.Component.extend({
     // Detect when the page is visible or hidden
     handleVisibilityChange() {
 
-        var self = this;
+        let self = this;
 
         // If the document is hidden
         if (document[this.get('hidden')]) {
@@ -159,7 +159,7 @@ export default Ember.Component.extend({
 
                 // Pause the custom control progress bar
                 self.get('$progressBar').stop();
-                Ember.run.cancel(vidClock);
+                Ember.run.cancel(self.vidClock);
 
                 // Set page visibility to hidden
                 self.set('isHidden', true);
@@ -194,7 +194,7 @@ export default Ember.Component.extend({
         self.get('Player').seekTo(0);
         self.get('Player').stopVideo();
 
-        Ember.run.cancel(vidClock);
+        Ember.run.cancel(self.vidClock);
 
         // Destroy any preexisting Youtube Player object and set the Player property to null so that future players can be instantiated
         self.get('Player').destroy();
@@ -220,7 +220,7 @@ export default Ember.Component.extend({
             self.set('isPlaying', false);
 
             self.get('$progressBar').stop();
-            Ember.run.cancel(vidClock);
+            Ember.run.cancel(self.vidClock);
         } else {
             self.get('Player').playVideo();
             self.set('isPlaying', true);
@@ -278,7 +278,7 @@ export default Ember.Component.extend({
         self.get('Player').seekTo( self.get('xPos') * (self.get('duration') / 100) );
 
         self.get('$progressBar').stop();
-        Ember.run.cancel(vidClock);
+        Ember.run.cancel(self.vidClock);
 
         self.get('animateProgressBar').call(self, self.get('xPos'), 0, true);
 
@@ -286,7 +286,7 @@ export default Ember.Component.extend({
 
     // For progress bar logic
     handleVideoState: function(state) {
-        var self = this;
+        let self = this;
 
         if (state === 1) {
 
@@ -299,15 +299,15 @@ export default Ember.Component.extend({
                     self.get('animateProgressBar').call(self, self.get('percent'), 100);
                 }
 
-                poll();
+                self.poll();
 
             }
 
-            poll = function() {
-                vidClock = Ember.run.later(progresser, 100);
-            };
+            self.poll = function() {
+                self.vidClock = Ember.run.later(progresser, 100);
+            }
 
-            poll();
+            self.poll();
 
         }
     },
@@ -358,7 +358,7 @@ export default Ember.Component.extend({
 
     // Anytime the Player plays, pauses, or stops
     onPlayerStateChange: function(event) {
-        var self = this;
+        let self = this;
 
         if (event.data === YT.PlayerState.PLAYING) {
             self.set('isPlaying', true);
@@ -372,7 +372,7 @@ export default Ember.Component.extend({
 
         else if (event.data === YT.PlayerState.PAUSED) {
             self.get('$progressBar').stop();
-            Ember.run.cancel(vidClock);
+            Ember.run.cancel(self.vidClock);
 
             self.set('isPlaying', false);
 
