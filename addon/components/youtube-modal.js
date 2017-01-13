@@ -56,53 +56,55 @@ export default Ember.Component.extend({
       STATE
     \*------------------------------------*/
 
-    // the x position of the youtube progress bar
+    // THE X POSITION OF THE YOUTUBE PROGRESS BAR
     xPos: 0,
 
     // SHOULD THE VIDEO MODAL BE VISIBLE?
     showVideoModal: false,
 
-    // is the video playing?
+    // IS THE VIDEO PLAYING?
     isPlaying: true,
 
-    // The progress percentage
+    // THE PROGRESS PERCENTAGE
     percent: null,
 
-    // Player video length
+    // PLAYER VIDEO LENGTH
     duration: null,
 
-    // Player video elapsed
+    // PLAYER VIDEO ELAPSED
     time: 0,
 
-    // Is the progress bar being dragged/scrubbed?
+    // IS THE PROGRESS BAR BEING DRAGGED/SCRUBBED?
     isDragging: false,
 
-    // Did the user manually pause the video?
+    // DID THE USER MANUALLY PAUSE THE VIDEO?
     isManualStop: false,
 
-    // Track if page is visible or hidden
+    // TRACK IF PAGE IS VISIBLE OR HIDDEN
     isHidden: null,
 
-    // Vendor prefixed hidden API
+    // VENDOR PREFIXED HIDDEN API
     hidden: null,
 
-    // Vendor prefixed visibilitychange API
+    // VENDOR PREFIXED VISIBILITYCHANGE API
     visibilityChange: null,
 
-    // is the overlay enabled or disabled?
+    // IS THE OVERLAY ENABLED OR DISABLED?
     videoOverlay: true,
 
+    // PROGRESS OF THE VIDEO PLAYER
     vidClock: undefined,
 
+    // POLLING FOR `vidClock` CHANGES
     poll: undefined,
 
-    // are custom controls enabled or disabled?
+    // ARE CUSTOM CONTROLS ENABLED OR DISABLED?
     getCustomControls: function() {
         var self = this;
 
-        // Youtube API controls accepts 0 and 1
-        // If customControls is set to `true, then hide the default controls
-        // If `false`, then reveal the default controls
+        // YOUTUBE API CONTROLS ACCEPTS 0 AND 1
+        // IF CUSTOMCONTROLS IS SET TO `true`, THEN HIDE THE DEFAULT CONTROLS
+        // IF `false`, THEN REVEAL THE DEFAULT CONTROLS
         if (self.get('customControls') === true) {
             return 0;
         } else {
@@ -127,7 +129,7 @@ export default Ember.Component.extend({
     /*------------------------------------*\
       METHODS
     \*------------------------------------*/
-    // Perform a browser check to handle prefixing for the visibilitychange API
+    // PERFORM A BROWSER CHECK TO HANDLE PREFIXING FOR THE VISIBILITYCHANGE API
     prefixVisibilityChange() {
         if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
             this.set('hidden', 'hidden');
@@ -144,48 +146,48 @@ export default Ember.Component.extend({
         }
     },
 
-    // Detect when the page is visible or hidden
+    // DETECT WHEN THE PAGE IS VISIBLE OR HIDDEN
     handleVisibilityChange() {
 
         let self = this;
 
-        // If the document is hidden
+        // IF THE DOCUMENT IS HIDDEN
         if (document[this.get('hidden')]) {
             // If the modal is visible
             if ( self.get('showVideoModal') ) {
-                // Pause the video
+                // IF THE MODAL IS VISIBLE
                 self.get('Player').pauseVideo();
                 self.set('isPlaying', false);
 
-                // Pause the custom control progress bar
+                // PAUSE THE CUSTOM CONTROL PROGRESS BAR
                 self.get('$progressBar').stop();
                 Ember.run.cancel(self.vidClock);
 
-                // Set page visibility to hidden
+                // SET PAGE VISIBILITY TO HIDDEN
                 self.set('isHidden', true);
             }
 
-        // If the document is visible
+        // IF THE DOCUMENT IS VISIBLE
         } else {
-            // If the modal is visible
+            // IF THE MODAL IS VISIBLE
             if (self.get('showVideoModal')) {
 
-                // If the user didn't manually paused/stopped the video
+                // IF THE USER DIDN'T MANUALLY PAUSED/STOPPED THE VIDEO
                 if ( !self.get('isManualStop') ) {
-                    // Play the video
+                    // PLAY THE VIDEO
                     self.get('Player').playVideo();
                     self.set('isPlaying', true);
                 }
 
-                // Set page visibility to visible
+                // SET PAGE VISIBILITY TO VISIBLE
                 self.set('isHidden', false);
 
             }
         }
 
-    }, // end handleVisibilityChange()
+    }, // END handleVisibilityChange()
 
-    // Closes the video modal
+    // CLOSES THE VIDEO MODAL
     closeModal() {
         var self = this;
 
@@ -196,11 +198,11 @@ export default Ember.Component.extend({
 
         Ember.run.cancel(self.vidClock);
 
-        // Destroy any preexisting Youtube Player object and set the Player property to null so that future players can be instantiated
+        // DESTROY ANY PREEXISTING YOUTUBE PLAYER OBJECT AND SET THE PLAYER PROPERTY TO NULL SO THAT FUTURE PLAYERS CAN BE INSTANTIATED
         self.get('Player').destroy();
         self.set('Player', null);
 
-        // Reset the progress bar
+        // RESET THE PROGRESS BAR
         Ember.run.later(function() {
             self.get('$progressBar').removeAttr('style');
             self.set('time', 0);
@@ -211,7 +213,7 @@ export default Ember.Component.extend({
 
     },
 
-    // Opens or closes the video modal
+    // OPENS OR CLOSES THE VIDEO MODAL
     toggleVideo() {
         var self = this;
 
@@ -241,7 +243,7 @@ export default Ember.Component.extend({
 
     },
 
-    // Detect if click is left button
+    // DETECT IF CLICK IS LEFT BUTTON
     detectLeftButton: function(event) {
         if ('buttons' in event) {
             return event.buttons === 1;
@@ -252,7 +254,7 @@ export default Ember.Component.extend({
         }
     },
 
-    // For progress bar animation
+    // FOR PROGRESS BAR ANIMATION
     animateProgressBar: function(percent, speed, scrubbing) {
         var self = this;
 
@@ -269,7 +271,7 @@ export default Ember.Component.extend({
         });
     },
 
-    // When the user manually scrubs the progress bar
+    // WHEN THE USER MANUALLY SCRUBS THE PROGRESS BAR
     scrubProgressBar: function() {
         var self = this;
 
@@ -284,7 +286,7 @@ export default Ember.Component.extend({
 
     },
 
-    // For progress bar logic
+    // FOR PROGRESS BAR LOGIC
     handleVideoState: function(state) {
         let self = this;
 
@@ -312,7 +314,7 @@ export default Ember.Component.extend({
         }
     },
 
-    // For progress bar scrubbing
+    // FOR PROGRESS BAR SCRUBBING
     dragging: function() {
 
         var self = this;
@@ -330,7 +332,7 @@ export default Ember.Component.extend({
 
             if ( self.get('isDragging') ) {
                 self.get('scrubProgressBar').call(self);
-                // Change the progress number as you scrub the progress bar
+                // CHANGE THE PROGRESS NUMBER AS YOU SCRUB THE PROGRESS BAR
                 self.set('time', Math.floor(self.get('xPos') * (self.get('duration') / 100)));
             }
 
@@ -343,7 +345,7 @@ export default Ember.Component.extend({
 
     },
 
-    // When the Player starts
+    // WHEN THE `Player` STARTS
     onPlayerReady: function(event) {
         var self = this;
 
@@ -356,14 +358,14 @@ export default Ember.Component.extend({
         Ember.$('.yt-overlay').delay(500).fadeOut();
     },
 
-    // Anytime the Player plays, pauses, or stops
+    // ANYTIME THE `Player` PLAYS, PAUSES, OR STOPS
     onPlayerStateChange: function(event) {
         let self = this;
 
         if (event.data === YT.PlayerState.PLAYING) {
             self.set('isPlaying', true);
 
-            // If the the page hasn't been hidden by page visibility change event and the user manually turned on the video, then set `isManualStop` to false
+            // IF THE THE PAGE HASN'T BEEN HIDDEN BY PAGE VISIBILITY CHANGE EVENT AND THE USER MANUALLY TURNED ON THE VIDEO, THEN SET `isManualStop` TO `false`
             if ( !self.get('isHidden')) {
                 self.set('isManualStop', false);
             }
@@ -376,7 +378,7 @@ export default Ember.Component.extend({
 
             self.set('isPlaying', false);
 
-            // If the the page has been hidden by page visibility change event and the user manually turned on the video, then set `isManualStop` to true
+            // IF THE THE PAGE HAS BEEN HIDDEN BY PAGE VISIBILITY CHANGE EVENT AND THE USER MANUALLY TURNED ON THE VIDEO, THEN SET `isManualStop` TO `true`
             if ( !self.get('isHidden')) {
                 self.set('isManualStop', true);
             }
@@ -384,7 +386,7 @@ export default Ember.Component.extend({
         }
 
         else if (event.data === YT.PlayerState.ENDED) {
-            // When the youtube video has ended, close the modal
+            // WHEN THE YOUTUBE VIDEO HAS ENDED, CLOSE THE MODAL
             self.closeModal();
         }
 
@@ -392,22 +394,21 @@ export default Ember.Component.extend({
 
     },
 
-    // This method will run if the showVideoModal property changes
-    startVideo: function() {
-
+    // THIS METHOD WILL RUN IF THE `showVideoModal` PROPERTY CHANGES
+    startVideo: Ember.observer('showVideoModal', function() {
         Ember.run.scheduleOnce('afterRender', () => {
 
             var self = this;
 
-            // get the passed in video id
+            // GET THE PASSED IN VIDEO ID
             let videoId = self.get('videoId');
             let startTime = self.get('startTime');
             let Player;
 
-            // If the youtube player hasn't been initialized
+            // IF THE YOUTUBE PLAYER HASN'T BEEN INITIALIZED
             if (self.get('Player') === null && self.get('showVideoModal')) {
 
-                // create an instance of the youtube player / aka initialize the youtube player
+                // CREATE AN INSTANCE OF THE YOUTUBE PLAYER / AKA INITIALIZE THE YOUTUBE PLAYER
                 Player = new YT.Player('player', {
                     width: self.get('width'),
                     height: self.get('height'),
@@ -427,8 +428,7 @@ export default Ember.Component.extend({
             } // end if this.get('player') === null
 
         }); // end afterRender
-
-    }.observes('showVideoModal'),
+    }),
 
 
     /*------------------------------------*\
@@ -437,13 +437,13 @@ export default Ember.Component.extend({
     didInsertElement: function() {
         Ember.run.scheduleOnce('afterRender', () => {
 
-            // Initialize selectors
+            // INITIALIZE SELECTORS
             this.initializeSelectors();
 
-            // Initialize progress bar scrubbing
+            // INITIALIZE PROGRESS BAR SCRUBBING
             this.dragging();
 
-            // Play Video if showVideoModal is set to true
+            // PLAY VIDEO IF 'showVideoModal' IS SET TO TRUE
             this.startVideo();
 
         }); // END `afterRender`
