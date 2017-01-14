@@ -2,30 +2,31 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
 
-    showVideoModal: false,
-    videoId: "WgkQU32XSFQ",
+    /*------------------------------------*\
+      SERVICES
+    \*------------------------------------*/
+    youtubeModalService: Ember.inject.service('youtube-modal-service'),
 
     listOfVideos: {
-        "gleason": "WgkQU32XSFQ",
-        "mothersday": "2BPr217zLps",
-        "bleedforthis": "LiDO_sP00uk"
-    },
-
-    actions: {
-        openModal(listOfVideos, videoId) {
-            this.set('showVideoModal', true);
-            this.set('videoId', listOfVideos[videoId]);
+        "gleason": {
+            videoId: "WgkQU32XSFQ",
+            startTime: 40,
+            title: "Gleason Trailer",
         },
-
-        galleryOpenModal(id) {
-            this.set('showVideoModal', true);
-            this.set('videoId', id);
+        "mothersday": {
+            videoId: "2BPr217zLps",
+            title: "Mothers Day Trailer"
+        },
+        "bleedforthis": {
+            videoId: "zQ6ny-fROX8",
+            title: "Bleed For This Trailer"
         }
     },
 
-    test: Ember.computed('model', function() {
-        let videos = this.get('model');
-        return videos;
-    })
+    actions: {
+        openModal(item) {
+            this.get('youtubeModalService').openVideoModal(item);
+        }
+    }
 
 });

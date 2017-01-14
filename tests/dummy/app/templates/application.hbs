@@ -1,23 +1,27 @@
+{{!-- THE SINGLE SOURCE OF TRUTH MODAL --}}
 {{youtube-modal
-    showVideoModal = showVideoModal
-    videoId = videoId
     customControls = true
-    startTime=40
 }}
 
 
-<button {{action "openModal" listOfVideos "gleason"}}>Open gleason</button>
-<button {{action "openModal" listOfVideos "mothersday"}}>Open mothersday</button>
-<button {{action "openModal" listOfVideos "bleedforthis"}}>Open bleedforthis</button>
+{{!-- BUTTONS EXAMPLES --}}
+<div class="buttons">
+    <button {{action "openModal" listOfVideos.gleason}}>Open Gleason Trailer</button>
+    <button {{action "openModal" listOfVideos.mothersday}}>Open Gleason Trailer</button>
+    <button {{action "openModal" listOfVideos.bleedforthis}}>Open Gleason Trailer</button>
+</div>
 
-{{#each-in listOfVideos as |name id|}}
-    <a href="#" {{action 'galleryOpenModal' id}}><img src="http://placehold.it/300x250" alt=""></a>
-    <a href="#" {{action "galleryOpenModal" id}}>{{name}}</a>
+
+{{!-- GALLERY EXAMPLES --}}
+<div class="gallery">
+{{#each-in listOfVideos as |key item|}}
+    <a href="#" {{action 'openModal' item}}>
+        <img src="http://placehold.it/300x250" alt="">
+        <div>{{item.title}}</div>
+    </a>
 {{/each-in}}
+</div>
 
 
-<br />
-<br />
-<br />
-
+{{!-- OUTLET --}}
 {{outlet}}

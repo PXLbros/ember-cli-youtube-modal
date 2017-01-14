@@ -7,7 +7,7 @@ export default Ember.Component.extend({
       ELEMENT ATTRIBUTES
     \*------------------------------------*/
     classNames: ['youtube-modal'],
-    classNameBindings: ['showVideoModal:is-open'],
+    classNameBindings: ['youtubeModalService.showVideoModal:is-open'],
 
     /*------------------------------------*\
       SERVICES
@@ -27,21 +27,23 @@ export default Ember.Component.extend({
         // Handle page visibility change
         document.addEventListener(this.get('visibilityChange'), this.get('handleVisibilityChange').bind(this), false);
 
-        let showVideoModal = this.get('youtubeModalService').showVideoModal;
 
-        this.set('showVideoModal', showVideoModal);
-
-        // console.log(this.get('showVideoModal'));
+        let configObject = Ember.getOwner(this).resolveRegistration('config:environment');
+        this.set('configObject', configObject);
 
     },
+
+
+    /*------------------------------------*\
+      VARIABLES
+    \*------------------------------------*/
+    configObject: null,
 
 
     /*------------------------------------*\
       YOUTUBE PROPERTIES
     \*------------------------------------*/
     Player: null,
-    videoId: null,
-    startTime: null,
 
 
     /*------------------------------------*\
@@ -58,9 +60,6 @@ export default Ember.Component.extend({
 
     // THE X POSITION OF THE YOUTUBE PROGRESS BAR
     xPos: 0,
-
-    // SHOULD THE VIDEO MODAL BE VISIBLE?
-    showVideoModal: false,
 
     // IS THE VIDEO PLAYING?
     isPlaying: true,
@@ -119,9 +118,6 @@ export default Ember.Component.extend({
     actions: {
         closeModal() {
             this.closeModal();
-        },
-        toggleVideo() {
-            this.toggleVideo();
         }
     },
 
@@ -154,7 +150,7 @@ export default Ember.Component.extend({
         // IF THE DOCUMENT IS HIDDEN
         if (document[this.get('hidden')]) {
             // If the modal is visible
-            if ( self.get('showVideoModal') ) {
+            if ( self.get('youtubeModalService.showVideoModal') ) {
                 // IF THE MODAL IS VISIBLE
                 self.get('Player').pauseVideo();
                 self.set('isPlaying', false);
@@ -170,7 +166,7 @@ export default Ember.Component.extend({
         // IF THE DOCUMENT IS VISIBLE
         } else {
             // IF THE MODAL IS VISIBLE
-            if (self.get('showVideoModal')) {
+            if (self.get('youtubeModalService.showVideoModal')) {
 
                 // IF THE USER DIDN'T MANUALLY PAUSED/STOPPED THE VIDEO
                 if ( !self.get('isManualStop') ) {
@@ -191,7 +187,7 @@ export default Ember.Component.extend({
     closeModal() {
         var self = this;
 
-        self.set('showVideoModal', false);
+        self.set('youtubeModalService.showVideoModal', false);
 
         self.get('Player').seekTo(0);
         self.get('Player').stopVideo();
@@ -395,18 +391,18 @@ export default Ember.Component.extend({
     },
 
     // THIS METHOD WILL RUN IF THE `showVideoModal` PROPERTY CHANGES
-    startVideo: Ember.observer('showVideoModal', function() {
+    startVideo: Ember.observer('youtubeModalService.showVideoModal', function() {
         Ember.run.scheduleOnce('afterRender', () => {
 
             var self = this;
 
             // GET THE PASSED IN VIDEO ID
-            let videoId = self.get('videoId');
-            let startTime = self.get('startTime');
+            let videoId = self.get('youtubeModalService.videoId');
+            let startTime = self.get('youtubeModalService.startTime');
             let Player;
 
             // IF THE YOUTUBE PLAYER HASN'T BEEN INITIALIZED
-            if (self.get('Player') === null && self.get('showVideoModal')) {
+            if (self.get('Player') === null && self.get('youtubeModalService.showVideoModal')) {
 
                 // CREATE AN INSTANCE OF THE YOUTUBE PLAYER / AKA INITIALIZE THE YOUTUBE PLAYER
                 Player = new YT.Player('player', {

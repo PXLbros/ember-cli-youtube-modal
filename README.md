@@ -25,7 +25,7 @@ This README outlines the details of collaborating on this Ember addon.
 
 For more information on using ember-cli, visit [http://ember-cli.com/](http://ember-cli.com/).
 
-## API
+## API / Configuration Options
 
 ### showVideoModal
 ### videoId
@@ -38,6 +38,18 @@ For more information on using ember-cli, visit [http://ember-cli.com/](http://em
 ### durationDivider
 ### playIcon
 ### pauseIcon
+
+
+In your component, you have to configure some options, some required, others optional.
+
+```hbs
+{{youtube-modal
+    showVideoModal = false
+    videoId = "WgkQU32XSFQ"
+    customControls = true
+    startTime = 40
+}}
+```
 
 
 # How To Use Youtube-Modal 
@@ -235,6 +247,8 @@ FIrst in your `modal-video` component, set `customControls` to be `true`
     pauseIcon = '<Your Custom Text, HTML, or SVG>'
 }}
 ```
+
+I've found this [online html/xml compressor to be helpful](http://www.textfixer.com/html/compress-html-compression.php).
 
 ## Further Customizations
 

@@ -1,5 +1,11 @@
-export function initialize(application) {
+// import YoutubeModalService from 'ember-cli-youtube-modal/services/youtube-modal-service';
+// import config from '../config/environment';
+
+export function initialize( application ) {
     // application.inject('route', 'foo', 'service:foo');
+
+    // console.log(YoutubeModalService);
+    // console.log(config);
 
     // Delay application loading until all of the following promises are resolved
     application.deferReadiness();
@@ -21,13 +27,19 @@ export function initialize(application) {
     }));
 
     // Load application once promises are resolved
-    return Ember.RSVP.Promise.all(promises).then(()=>{
+    return Ember.RSVP.Promise.all(promises)
+    .then( () => {
+        console.log('success');
         application.advanceReadiness();
-    });
+    })
+    .catch( (reason) => {
+        console.log('error');
+        application.advanceReadiness();
+    })
 
 }
 
 export default {
-    name: 'youtube-init',
-    initialize
+  name: 'youtube-modal-initializer',
+  initialize
 };
