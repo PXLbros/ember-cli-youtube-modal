@@ -3,6 +3,8 @@
 
 module.exports = function(/* environment, appConfig */) {
     return {
-
+        youtubeModalServiceDefaults: {
+            injectionFactories: ['controller', 'view', 'component']
+        }
     };
 };

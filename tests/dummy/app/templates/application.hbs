@@ -1,20 +1,21 @@
 {{!-- THE SINGLE SOURCE OF TRUTH MODAL --}}
 {{youtube-modal
     customControls = true
+    loopPlaylist = true
 }}
 
 
 {{!-- BUTTONS EXAMPLES --}}
 <div class="buttons">
-    <button {{action "openModal" listOfVideos.gleason}}>Open Gleason Trailer</button>
-    <button {{action "openModal" listOfVideos.mothersday}}>Open Gleason Trailer</button>
-    <button {{action "openModal" listOfVideos.bleedforthis}}>Open Gleason Trailer</button>
+    <button {{action "openModal" listOfYtVideos.gleason}}>Open Gleason Trailer</button>
+    <button {{action "openModal" listOfYtVideos.mothersday}}>Open Mother's Day Trailer</button>
+    <button {{action "openModal" listOfYtVideos.bleedforthis}}>Open Bleed For This Trailer</button>
 </div>
 
 
 {{!-- GALLERY EXAMPLES --}}
 <div class="gallery">
-{{#each-in listOfVideos as |key item|}}
+{{#each-in listOfYtVideos as |key item|}}
     <a href="#" {{action 'openModal' item}}>
         <img src="http://placehold.it/300x250" alt="">
         <div>{{item.title}}</div>
@@ -22,6 +23,10 @@
 {{/each-in}}
 </div>
 
+{{!-- PLAYLIST --}}
+<div class="buttons">
+    <button {{action "openModal" listOfYtVideos}}>Open Playlist</button>
+</div>
 
 {{!-- OUTLET --}}
 {{outlet}}

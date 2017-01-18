@@ -7,7 +7,7 @@ export default Ember.Controller.extend({
     \*------------------------------------*/
     youtubeModalService: Ember.inject.service('youtube-modal-service'),
 
-    listOfVideos: {
+    listOfYtVideos: {
         "gleason": {
             videoId: "WgkQU32XSFQ",
             startTime: 40,
@@ -15,13 +15,14 @@ export default Ember.Controller.extend({
         },
         "mothersday": {
             videoId: "2BPr217zLps",
-            title: "Mothers Day Trailer"
+            title: "Mother's Day Trailer"
         },
         "bleedforthis": {
             videoId: "zQ6ny-fROX8",
             title: "Bleed For This Trailer"
         }
     },
+
 
     actions: {
         openModal(item) {

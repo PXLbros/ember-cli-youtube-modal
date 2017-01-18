@@ -1,20 +1,8 @@
 import Ember from 'ember';
 import layout from '../templates/components/youtube-modal';
+import detectLeftClick from 'ember-cli-youtube-modal/utils/detect-left-click'
 
-export default Ember.Component.extend({
-    layout,
-    /*------------------------------------*\
-      ELEMENT ATTRIBUTES
-    \*------------------------------------*/
-    classNames: ['youtube-modal'],
-    classNameBindings: ['youtubeModalService.showVideoModal:is-open'],
-
-    /*------------------------------------*\
-      SERVICES
-    \*------------------------------------*/
-    youtubeModalService: Ember.inject.service('youtube-modal-service'),
-
-
+export default Ember.Component.extend({layout,
     /*------------------------------------*\
       INIT
     \*------------------------------------*/
@@ -31,7 +19,24 @@ export default Ember.Component.extend({
         let configObject = Ember.getOwner(this).resolveRegistration('config:environment');
         this.set('configObject', configObject);
 
+        this.get('youtubeModalService');
+
+
     },
+
+    /*------------------------------------*\
+      ELEMENT ATTRIBUTES
+    \*------------------------------------*/
+    classNames: ['youtube-modal'],
+    classNameBindings: ['youtubeModalService.showVideoModal:is-open'],
+
+    /*------------------------------------*\
+      SERVICES
+    \*------------------------------------*/
+    youtubeModalService: Ember.inject.service('youtube-modal-service'),
+
+
+
 
 
     /*------------------------------------*\
@@ -71,7 +76,7 @@ export default Ember.Component.extend({
     duration: null,
 
     // PLAYER VIDEO ELAPSED
-    time: 0,
+    elapsedTime: 0,
 
     // IS THE PROGRESS BAR BEING DRAGGED/SCRUBBED?
     isDragging: false,
@@ -118,6 +123,9 @@ export default Ember.Component.extend({
     actions: {
         closeModal() {
             this.closeModal();
+        },
+        toggleVideo() {
+            this.toggleVideo();
         }
     },
 
@@ -183,30 +191,46 @@ export default Ember.Component.extend({
 
     }, // END handleVisibilityChange()
 
-    // CLOSES THE VIDEO MODAL
-    closeModal() {
-        var self = this;
-
-        self.set('youtubeModalService.showVideoModal', false);
+    // CLEAN UP VIDEO SCRUB
+    cleanUpScrub() {
+        let self = this;
 
         self.get('Player').seekTo(0);
         self.get('Player').stopVideo();
 
-        Ember.run.cancel(self.vidClock);
+        // Ember.run.cancel(self.vidClock);
 
         // DESTROY ANY PREEXISTING YOUTUBE PLAYER OBJECT AND SET THE PLAYER PROPERTY TO NULL SO THAT FUTURE PLAYERS CAN BE INSTANTIATED
         self.get('Player').destroy();
         self.set('Player', null);
 
+        Ember.run.cancel(self.vidClock);
+
         // RESET THE PROGRESS BAR
         Ember.run.later(function() {
             self.get('$progressBar').removeAttr('style');
-            self.set('time', 0);
+            self.set('elapsedTime', 0);
             self.set('duration', 0);
 
             Ember.$('.yt-overlay').removeAttr('style');
         }, 500);
 
+
+    },
+
+    // CLOSES THE VIDEO MODAL
+    closeModal() {
+        let self = this;
+
+        self.set('youtubeModalService.showVideoModal', false);
+
+        self.set('youtubeModalService.playerCounter', 0);
+
+        self.set('youtubeModalService.isPlaylist', false);
+
+        self.cleanUpScrub();
+
+        console.log(self.get('elapsedTime'));
     },
 
     // OPENS OR CLOSES THE VIDEO MODAL
@@ -229,25 +253,14 @@ export default Ember.Component.extend({
     initializeSelectors: function() {
         var self = this;
 
-        var $progressContainer = Ember.$('.progress-container');
-        var $progressBar = Ember.$('.progress');
-        var $ytDuration = Ember.$('.yt-duration');
+        let $progressContainer = Ember.$('.progress-container');
+        let $progressBar = Ember.$('.progress-bar');
+        let $ytDuration = Ember.$('.yt-duration');
 
         self.set('$progressContainer', $progressContainer);
         self.set('$progressBar', $progressBar);
         self.set('$ytDuration', $ytDuration);
 
-    },
-
-    // DETECT IF CLICK IS LEFT BUTTON
-    detectLeftButton: function(event) {
-        if ('buttons' in event) {
-            return event.buttons === 1;
-        } else if ('which' in event) {
-            return event.which === 1;
-        } else {
-            return event.button === 1;
-        }
     },
 
     // FOR PROGRESS BAR ANIMATION
@@ -282,31 +295,38 @@ export default Ember.Component.extend({
 
     },
 
-    // FOR PROGRESS BAR LOGIC
+    // SET THE VALUE OF THE ELAPSED TIME AND EXECUTE THE ANIMATED REPRESENTATION OF THE ELAPSED TIME
+    setVideoProgress: function(state) {
+        let self = this;
+
+        if (state === 1 && self.get('Player') !== null) {
+            self.set('elapsedTime', self.get('Player').getCurrentTime());
+
+            self.set('percent', (self.get('elapsedTime') / self.get('duration')) * 100);
+
+            self.get('animateProgressBar').call(self, self.get('percent'), 100);
+        }
+
+        self.pollProgress(state);
+    },
+
+    // POLL `setVideoProgress()`
+    pollProgress: function(state) {
+        let self = this;
+
+        self.vidClock = Ember.run.later(function() {
+
+            self.setVideoProgress(state);
+        }, 100);
+
+    },
+
+    // HANDLE THE STATE OF THE VIDEO
     handleVideoState: function(state) {
         let self = this;
 
         if (state === 1) {
-
-            function progresser() {
-                if (state === 1 && self.get('Player') !== null) {
-                    self.set('time', self.get('Player').getCurrentTime());
-
-                    self.set('percent', (self.get('time') / self.get('duration')) * 100);
-
-                    self.get('animateProgressBar').call(self, self.get('percent'), 100);
-                }
-
-                self.poll();
-
-            }
-
-            self.poll = function() {
-                self.vidClock = Ember.run.later(progresser, 100);
-            }
-
-            self.poll();
-
+            self.pollProgress(state);
         }
     },
 
@@ -317,7 +337,7 @@ export default Ember.Component.extend({
 
         self.get('$progressContainer').on('mousedown', function(event) {
 
-            if (self.get('detectLeftButton')(event)) {
+            if (detectLeftClick(event)) {
                 self.set('isDragging', true);
                 self.get('scrubProgressBar').call(self);
             }
@@ -329,7 +349,7 @@ export default Ember.Component.extend({
             if ( self.get('isDragging') ) {
                 self.get('scrubProgressBar').call(self);
                 // CHANGE THE PROGRESS NUMBER AS YOU SCRUB THE PROGRESS BAR
-                self.set('time', Math.floor(self.get('xPos') * (self.get('duration') / 100)));
+                self.set('elapsedTime', Math.floor(self.get('xPos') * (self.get('duration') / 100)));
             }
 
         });
@@ -345,12 +365,15 @@ export default Ember.Component.extend({
     onPlayerReady: function(event) {
         var self = this;
 
+        // TURN UP THE VOLUMN
         event.target.setVolume(100);
+        // PLAY THE VIDEO
         event.target.playVideo();
+        // KEEP TRACK OF THE PLAY SATE
         self.set('isPlaying', true);
-
+        // GET THE DURATION OF THE VIDEO
         self.set('duration', self.get('Player').getDuration() - 1);
-
+        // FADE OUT THE OVERLAY (OVERLAY IS TO HIDE THE FLASHING THUMBNAIL);
         Ember.$('.yt-overlay').delay(500).fadeOut();
     },
 
@@ -358,6 +381,7 @@ export default Ember.Component.extend({
     onPlayerStateChange: function(event) {
         let self = this;
 
+        // WHEN THE YOUTUBE VIDEO IS PLAYING
         if (event.data === YT.PlayerState.PLAYING) {
             self.set('isPlaying', true);
 
@@ -368,6 +392,7 @@ export default Ember.Component.extend({
 
         }
 
+        // WHEN THE YOUTUBE PLAYER IS PAUSED
         else if (event.data === YT.PlayerState.PAUSED) {
             self.get('$progressBar').stop();
             Ember.run.cancel(self.vidClock);
@@ -381,9 +406,41 @@ export default Ember.Component.extend({
 
         }
 
+        // WHEN THE YOUTUBE PLAYER HAS ENDED
         else if (event.data === YT.PlayerState.ENDED) {
             // WHEN THE YOUTUBE VIDEO HAS ENDED, CLOSE THE MODAL
-            self.closeModal();
+            if ( !self.get('youtubeModalService.isPlaylist') ) {
+                self.closeModal();
+            } else {
+
+                self.incrementProperty( 'youtubeModalService.playerCounter' );
+
+                // IF THE LENGTH OF THE `playlistArray` IS GREATER THAN THE COUNTER
+                if (self.get('youtubeModalService.playlistArray').length > self.get('youtubeModalService.playerCounter') ) {
+
+                    // CLEAN UP SCRUB FOR NEXT VIDEO
+                    self.cleanUpScrub();
+
+                    // SET THE `videoId` EQUAL TO THE QUEUED VIDEO
+                    self.set('youtubeModalService.videoId', self.get('youtubeModalService.playlistArray')[self.get('youtubeModalService.playerCounter')].videoId);
+
+                    // IF THE QUEUED VIDEO HAS A `startTime` PROPERTY DEFIEND
+                    if ( self.get('youtubeModalService.playlistArray')[self.get('youtubeModalService.playerCounter')].startTime ) {
+                        self.set('youtubeModalService.startTime', self.get('youtubeModalService.playlistArray')[self.get('youtubeModalService.playerCounter')].startTime);
+                    } else {
+                    // IF NO CUSTOM `startTime` THEN JUST START FROM 0
+                        self.set('youtubeModalService.startTime', self.get('youtubeModalService.playlistArray')[self.get('youtubeModalService.playerCounter')].startTime);
+                    }
+
+                    // START THE VIDEO
+                    self.startVideo();
+                } else {
+                // IF `playerCounter` IS GREATER THAN `playlistArray` AKA THE LAST VIDEO IN THE ARRAY IS REACHED, TEHN CLOSE THE MODAL
+                    self.closeModal();
+                }
+
+            }
+
         }
 
         self.get('handleVideoState').call(self, event.data);
@@ -398,11 +455,16 @@ export default Ember.Component.extend({
 
             // GET THE PASSED IN VIDEO ID
             let videoId = self.get('youtubeModalService.videoId');
+
+            // GET THE PASSED IN START TIME
             let startTime = self.get('youtubeModalService.startTime');
+
+            // YOUTUBE PLAYER INSTANCE HOLDER
             let Player;
 
             // IF THE YOUTUBE PLAYER HASN'T BEEN INITIALIZED
-            if (self.get('Player') === null && self.get('youtubeModalService.showVideoModal')) {
+            if ( self.get('Player') === null && self.get('youtubeModalService.showVideoModal') ) {
+            // if ( self.get('youtubeModalService.showVideoModal') ) {
 
                 // CREATE AN INSTANCE OF THE YOUTUBE PLAYER / AKA INITIALIZE THE YOUTUBE PLAYER
                 Player = new YT.Player('player', {
@@ -419,6 +481,7 @@ export default Ember.Component.extend({
                     }
                 });
 
+                // SET THE `Player` KEY TO BE THE YOUTUBE PLAYER INSTANCE
                 self.set('Player', Player);
 
             } // end if this.get('player') === null
