@@ -73,6 +73,12 @@
     z-index: 10;
 }
 
+
+
+
+/*------------------------------------*\
+  PLAY / PAUSE YOUTUBE
+\*------------------------------------*/
 .yt-toggle {
     position: relative;
     padding: 0;
@@ -86,83 +92,6 @@
     display: block;
     overflow: hidden;
     position: relative;
-}
-
-.left {
-    height: 100%;
-    float: left;
-    background-color: white;
-    width: 36%;
-    transition: all 0.25s ease;
-    overflow: hidden;
-}
-.triangle-1 {
-    transform: translate(0, -100%);
-}
-.triangle-2 {
-    transform: translate(0, 100%);
-}
-.triangle-1,
-.triangle-2 {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: transparent;
-    width: 0;
-    height: 0;
-    border-right: 30px solid #000;
-    border-top: 15px solid transparent;
-    border-bottom: 15px solid transparent;
-    transition: transform 0.25s ease;
-}
-
-.right {
-    height: 100%;
-    float: right;
-    width: 36%;
-    background-color: white;
-    transition: all 0.25s ease;
-}
-
-.yt-toggle-icon.is-paused .left {
-    width: 50%;
-}
-.yt-toggle-icon.is-paused .right {
-    width: 50%;
-}
-.yt-toggle-icon.is-paused .triangle-1 {
-    transform: translate(0, -50%);
-}
-.yt-toggle-icon.is-paused .triangle-2 {
-    transform: translate(0, 50%);
-}
-
-
-.progress-container {
-    position: relative;
-    width: 100%;
-    height: 100px;
-    background: white;
-}
-
-.progress-container:hover {
-    cursor: pointer;
-}
-
-.progress-appearance {
-    width: 100%;
-    height: 100%;
-    background: red;
-}
-
-.progress-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 0;
-    height: 100%;
-    background: gray;
 }
 
 .yt-toggle-icon-holder {
@@ -192,5 +121,99 @@
 .is-paused .yt-toggle-icon.mod-play {
     opacity: 0;
 }
+
+/*------------------------------------*\
+  PLAY TRIANGLE
+\*------------------------------------*/
+
+.yt-triangle-1 {
+    transform: translate(0, -100%);
+}
+
+.yt-triangle-2 {
+    transform: translate(0, 100%);
+}
+
+.yt-triangle-1,
+.yt-triangle-2 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: transparent;
+    width: 0;
+    height: 0;
+    border-right: 30px solid #000;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    transition: transform 0.25s ease;
+}
+
+.yt-left-triangle {
+    height: 100%;
+    float: left;
+    background-color: white;
+    width: 36%;
+    transition: all 0.25s ease;
+    overflow: hidden;
+}
+
+.yt-right-triangle {
+    height: 100%;
+    float: right;
+    width: 36%;
+    background-color: white;
+    transition: all 0.25s ease;
+}
+
+.yt-toggle-icon.is-paused .left {
+    width: 50%;
+}
+
+.yt-toggle-icon.is-paused .right {
+    width: 50%;
+}
+
+.yt-toggle-icon.is-paused .triangle-1 {
+    transform: translate(0, -50%);
+}
+
+.yt-toggle-icon.is-paused .triangle-2 {
+    transform: translate(0, 50%);
+}
+
+/*------------------------------------*\
+  PROGRESS BAR
+\*------------------------------------*/
+
+.progress-container {
+    position: relative;
+    width: 100%;
+    height: 100px;
+    background: white;
+}
+
+.progress-container:hover {
+    cursor: pointer;
+}
+
+.progress-appearance {
+    width: 100%;
+    height: 100%;
+    background: red;
+}
+
+.progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 100%;
+    background: gray;
+}
+
+
+
+
 
 

@@ -4,10 +4,10 @@ export function playIcon(params/*, hash*/) {
 
     if (params[0] === undefined) {
         return `<div class="yt-toggle-icon-default">
-                <div class="left"></div>
-                <div class="right"></div>
-                <div class="triangle-1"></div>
-                <div class="triangle-2"></div>
+                <div class="yt-left-triangle"></div>
+                <div class="yt-right-triangle"></div>
+                <div class="yt-triangle-1"></div>
+                <div class="yt-triangle-2"></div>
             </div>`;
     } else {
         return params;
