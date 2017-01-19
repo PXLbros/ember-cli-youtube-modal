@@ -30,50 +30,61 @@ export default Ember.Service.extend({
       METHODS
     \*------------------------------------*/
 
+
     /**
      *
      */
     openVideoModal(item) {
-        // IF A SINGLE VIDEO IS TRIGGERED
-        if ( item.videoId ) {
+
+        if ( typeof item === "string" ) {
 
             // SET THE YOUTUBE VIDEO ID
-            this.set('videoId', item.videoId);
+            this.set('videoId', item);
 
-            // PLAY VIDEO AT CUSTOM START TIME
-            if ( item.startTime ) {
-                this.set('startTime', item.startTime);
-            } else {
-                this.set('startTime', 0);
-            }
 
-        } else {
+        } else if ( typeof item === "object") {
+            // IF A SINGLE VIDEO IS TRIGGERED
+            if ( item.videoId ) {
 
-        // IF A PLAYLIST IS TRIGGERED
+                // SET THE YOUTUBE VIDEO ID
+                this.set('videoId', item.videoId);
 
-            // CONVERT OBJECT TO ARRAY
-            let ytVideoArray = [];
-
-            for ( let i in item ) {
-                if ( item.hasOwnProperty(i) ) {
-                    ytVideoArray.push( item[i] );
+                // PLAY VIDEO AT CUSTOM START TIME
+                if ( item.startTime ) {
+                    this.set('startTime', item.startTime);
+                } else {
+                    this.set('startTime', 0);
                 }
-            }
 
-            // CHECK THAT THE PLAY LIST HAS MORE THAN ONE VIDEO
-            if ( ytVideoArray.length > 1 ) {
-                this.set( 'isPlaylist', true );
-                this.set( 'playlistArray', ytVideoArray );
-            }
-
-            // SET THE YOUTUBE VIDEO ID
-            this.set('videoId', ytVideoArray[this.playerCounter].videoId);
-
-            // PLAY VIDEO AT CUSTOM START TIME
-            if ( ytVideoArray[this.playerCounter].startTime ) {
-                this.set('startTime', ytVideoArray[this.playerCounter].startTime);
             } else {
-                this.set('startTime', 0);
+
+            // IF A PLAYLIST IS TRIGGERED
+
+                // CONVERT OBJECT TO ARRAY
+                let ytVideoArray = [];
+
+                for ( let i in item ) {
+                    if ( item.hasOwnProperty(i) ) {
+                        ytVideoArray.push( item[i] );
+                    }
+                }
+
+                // CHECK THAT THE PLAY LIST HAS MORE THAN ONE VIDEO
+                if ( ytVideoArray.length > 1 ) {
+                    this.set( 'isPlaylist', true );
+                    this.set( 'playlistArray', ytVideoArray );
+                }
+
+                // SET THE YOUTUBE VIDEO ID
+                this.set('videoId', ytVideoArray[this.playerCounter].videoId);
+
+                // PLAY VIDEO AT CUSTOM START TIME
+                if ( ytVideoArray[this.playerCounter].startTime ) {
+                    this.set('startTime', ytVideoArray[this.playerCounter].startTime);
+                } else {
+                    this.set('startTime', 0);
+                }
+
             }
 
         }

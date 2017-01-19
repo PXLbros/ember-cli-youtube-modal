@@ -1,7 +1,6 @@
 {{!-- THE SINGLE SOURCE OF TRUTH MODAL --}}
 {{youtube-modal
     customControls = true
-    loopPlaylist = true
 }}
 
 
@@ -27,6 +26,12 @@
 <div class="buttons">
     <button {{action "openModal" listOfYtVideos}}>Open Playlist</button>
 </div>
+
+{{!-- Single ID example --}}
+<div class="buttons">
+    <button {{action "openModal" "2BPr217zLps"}}>Open Video ID</button>
+</div>
+
 
 {{!-- OUTLET --}}
 {{outlet}}

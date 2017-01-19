@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/youtube-modal';
-import detectLeftClick from 'ember-cli-youtube-modal/utils/detect-left-click'
+import detectLeftClick from 'ember-cli-youtube-modal/utils/detect-left-click';
+import prefixVisibilityChange from 'ember-cli-youtube-modal/utils/prefix-visibility-change';
 
 export default Ember.Component.extend({layout,
     /*------------------------------------*\
@@ -299,14 +300,21 @@ export default Ember.Component.extend({layout,
     setVideoProgress: function(state) {
         let self = this;
 
-        if (state === 1 && self.get('Player') !== null) {
-            self.set('elapsedTime', self.get('Player').getCurrentTime());
+        // MAKE SURE PLAYER INSTANCE EXISTS AND THAT IT'S PLAYING
+        if ( self.get('Player') !== null && state === 1 ) {
 
-            self.set('percent', (self.get('elapsedTime') / self.get('duration')) * 100);
+            // MAKE SURE ELAPSED TIME NEVER EXCEEDS THE DURATION
+            if ( (self.get('duration') + 1) >=  self.get('Player').getCurrentTime() ) {
+                self.set( 'elapsedTime', self.get('Player').getCurrentTime() );
+                console.log(self.get('elapsedTime'));
+                console.log(self.get('duration'));
+                self.set( 'percent', ( self.get('elapsedTime') / self.get('duration') ) * 100 );
+                self.get( 'animateProgressBar' ).call( self, self.get('percent'), 100 );
+            }
 
-            self.get('animateProgressBar').call(self, self.get('percent'), 100);
         }
 
+        // POLL PROGRESS
         self.pollProgress(state);
     },
 
@@ -315,7 +323,6 @@ export default Ember.Component.extend({layout,
         let self = this;
 
         self.vidClock = Ember.run.later(function() {
-
             self.setVideoProgress(state);
         }, 100);
 
@@ -372,7 +379,7 @@ export default Ember.Component.extend({layout,
         // KEEP TRACK OF THE PLAY SATE
         self.set('isPlaying', true);
         // GET THE DURATION OF THE VIDEO
-        self.set('duration', self.get('Player').getDuration() - 1);
+        self.set( 'duration', self.get('Player').getDuration() - 1 );
         // FADE OUT THE OVERLAY (OVERLAY IS TO HIDE THE FLASHING THUMBNAIL);
         Ember.$('.yt-overlay').delay(500).fadeOut();
     },
@@ -464,7 +471,6 @@ export default Ember.Component.extend({layout,
 
             // IF THE YOUTUBE PLAYER HASN'T BEEN INITIALIZED
             if ( self.get('Player') === null && self.get('youtubeModalService.showVideoModal') ) {
-            // if ( self.get('youtubeModalService.showVideoModal') ) {
 
                 // CREATE AN INSTANCE OF THE YOUTUBE PLAYER / AKA INITIALIZE THE YOUTUBE PLAYER
                 Player = new YT.Player('player', {
