@@ -231,7 +231,7 @@ export default Ember.Component.extend({layout,
 
         self.cleanUpScrub();
 
-        console.log(self.get('elapsedTime'));
+        self.turnOffAdaptiveVid();
     },
 
     // OPENS OR CLOSES THE VIDEO MODAL
@@ -306,8 +306,8 @@ export default Ember.Component.extend({layout,
             // MAKE SURE ELAPSED TIME NEVER EXCEEDS THE DURATION
             if ( (self.get('duration') + 1) >=  self.get('Player').getCurrentTime() ) {
                 self.set( 'elapsedTime', self.get('Player').getCurrentTime() );
-                console.log(self.get('elapsedTime'));
-                console.log(self.get('duration'));
+                // console.log(self.get('elapsedTime'));
+                // console.log(self.get('duration'));
                 self.set( 'percent', ( self.get('elapsedTime') / self.get('duration') ) * 100 );
                 self.get( 'animateProgressBar' ).call( self, self.get('percent'), 100 );
             }
@@ -382,6 +382,9 @@ export default Ember.Component.extend({layout,
         self.set( 'duration', self.get('Player').getDuration() - 1 );
         // FADE OUT THE OVERLAY (OVERLAY IS TO HIDE THE FLASHING THUMBNAIL);
         Ember.$('.yt-overlay').delay(500).fadeOut();
+
+        // FLUID VIDEO
+        self.turnOnAdaptiveVid();
     },
 
     // ANYTIME THE `Player` PLAYS, PAUSES, OR STOPS
@@ -492,9 +495,44 @@ export default Ember.Component.extend({layout,
 
             } // end if this.get('player') === null
 
+
+
         }); // end afterRender
     }),
 
+    $adaptiveEl: Ember.$(window),
+
+    turnOnAdaptiveVid: function() {
+        let self = this;
+        let $youtubeIframe = Ember.$('.youtube-modal iframe');
+
+        $youtubeIframe.each(function() {
+            Ember.$(this)
+                .attr( 'data-aspectratio', this.height / this.width )
+                .removeAttr('height width')
+        });
+
+        this.$adaptiveEl.on('resize.ytModal', function() {
+
+            let newWidth = self.$adaptiveEl.width();
+
+            // console.log(newWidth);
+
+            $youtubeIframe.each(function() {
+                let $thisEl = Ember.$(this);
+                $thisEl
+                    .width(newWidth)
+                    .height(newWidth * $thisEl.attr('data-aspectratio'));
+
+            });
+
+        }).trigger('resize');
+
+    },
+
+    turnOffAdaptiveVid: function() {
+        this.$adaptiveEl.off('resize.ytModal');
+    },
 
     /*------------------------------------*\
       DID INSERT ELEMENT
@@ -510,6 +548,8 @@ export default Ember.Component.extend({layout,
 
             // PLAY VIDEO IF 'showVideoModal' IS SET TO TRUE
             this.startVideo();
+
+
 
         }); // END `afterRender`
     }, // END `didInsertElement`

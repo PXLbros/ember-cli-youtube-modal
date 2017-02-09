@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-youtube-modal",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Play a custom youtube video in a fullscreen modal",
   "directories": {
     "doc": "doc",

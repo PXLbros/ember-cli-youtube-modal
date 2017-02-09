@@ -95,7 +95,7 @@ export default Ember.Service.extend({
             // IF A SINGLE VIDEO IS TRIGGERED
             if ( item.videoId ) {
 
-                passInYtVidAttributes(item);
+                this.passInYtVidAttributes(item);
 
             } else {
 
